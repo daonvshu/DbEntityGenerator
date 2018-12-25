@@ -1,2 +1,1 @@
-# DbEntityGenerator
-数据库操作实例创建工具
+辅助DaoBase使用的工具程序，输入为dao_entity.xml的文件绝对路径
