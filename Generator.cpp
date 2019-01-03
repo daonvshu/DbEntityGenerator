@@ -157,11 +157,25 @@ QString Generator::getConstructCommitStr() {
 }
 
 QString Generator::getFieldStr() {
-	QString fieldT = "\t\tDaoEntityField %1 = \"%1\"_field;\n";
+	QString fieldT = "\t\tDaoEntityField %1 = \"%2\"_field;\n";
 	QString fieldStr;
 
 	for (const auto& field : fieldList) {
-		fieldStr.append(fieldT.arg(field.name));
+		fieldStr.append(fieldT.arg(field.name, [=] {
+			QByteArray p1data = field.name.toLatin1();
+			QString result = "";
+			int i = 0;
+			int lastIndex = 0;
+			for (; i < p1data.size(); i++) {
+				char p1char = p1data.at(i);
+				if (p1char >= 65 && p1char <= 90) {
+					result += p1data.mid(lastIndex, i - lastIndex).toLower() + '_';
+					lastIndex = i;
+				}
+			}
+			result += p1data.mid(lastIndex).toLower();
+			return result;
+		}()));
 	}
 
 	return fieldStr;
