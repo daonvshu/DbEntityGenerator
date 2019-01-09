@@ -4,6 +4,7 @@
 #include <qdom.h>
 #include <qmap.h>
 #include <qdebug.h>
+#include <qtextstream.h>
 
 QList<Generator::Field> Generator::fieldList;
 bool Generator::generatorStart(const QString & xmlPath) {
@@ -90,6 +91,38 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		hpp.replace("$BindValues$", getBindValueStr());
 
 		QFile hppFile(filePathBase + "/" + tbName + ".h");
+
+		QStringList customCodeList;
+		QString lineBuffer;
+
+		if (hppFile.exists()) {
+			hppFile.open(QIODevice::ReadOnly);
+
+			QTextStream in(&hppFile);
+			bool customStart = false;
+			while (!in.atEnd()) {
+				lineBuffer = in.readLine();
+				if (lineBuffer.contains("CustomCodeArea")) {
+					customStart = true;
+					continue;
+				} else if (lineBuffer.contains("End")) {
+					break;
+				}
+				if (customStart) {
+					customCodeList.append(lineBuffer);
+				}
+			}
+			hppFile.close();
+		}
+		lineBuffer = "";
+		for (const auto& line : customCodeList) {
+			lineBuffer.append(line).append('\n');
+		}
+		if (!lineBuffer.isEmpty()) {
+			lineBuffer = lineBuffer.left(lineBuffer.length() - 1);
+		}
+		hpp.replace("$CustomCode$", lineBuffer);
+
 		hppFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
 		hppFile.write(hpp.toLocal8Bit());
 		hppFile.close();

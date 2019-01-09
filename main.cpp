@@ -2,10 +2,12 @@
 #include "Generator.h"
 #include <qdebug.h>
 
+//#define DEBUG
 int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 
+#ifndef DEBUG
 	QStringList arguments = QCoreApplication::arguments();
 	if (arguments.size() < 2) {
 		qDebug() << "input argument!";
@@ -15,6 +17,11 @@ int main(int argc, char *argv[])
 			getchar();
 		}
 	}
+#else
+	if (!Generator::generatorStart("dao_entity.xml")) {
+		getchar();
+	}
+#endif // !DEBUG
 
 	return 0;
 }

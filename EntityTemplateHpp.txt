@@ -3,6 +3,10 @@
 
 #include "DaoEntityField.h"
 
+//************ CustomCodeArea ************
+$CustomCode$
+//!End
+
 class $ClassName$ {
 private:
 $Members$
