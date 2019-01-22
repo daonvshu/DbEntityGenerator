@@ -29,6 +29,10 @@ public:
 		return $FieldSize$;
 	}
 	/*can be called by nullptr*/
+	static QString engine() {
+		return "$EngineType$";
+	}
+	/*can be called by nullptr*/
 	static QString getTableName() {
 		return QStringLiteral("$TbName$");
 	}
@@ -46,14 +50,19 @@ public:
 		Fields fields;
 		return QStringList() $FieldIndex$;
 	}
+	/*can be called by nullptr*/
+	static QString getIdField() {
+		return $FieldId$;
+	}
 
 	QVariantList readEntity() const {
 		return QVariantList() $ReadEntity$;
 	}
 
-	void bindId(int id) {
+	void bindId($IdType$ id) {
 $BindId$
 	}
+
 	void bindValue(const QString& field, const QVariant& data) {
 		Fields fields;
 		$BindValues$

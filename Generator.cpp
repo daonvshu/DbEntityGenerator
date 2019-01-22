@@ -44,6 +44,11 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		auto tbName = tb.attribute("name");
 		entityNames << tbName;
 
+		QString engine = "";
+		if (tb.hasAttribute("engine")) {
+			engine = tb.attribute("engine");
+		}
+
 		auto hpp = hppTp;
 		hpp.replace("$ClassName$", tbName);
 
@@ -55,7 +60,8 @@ bool Generator::generatorStart(const QString & xmlPath) {
 			Field field;
 			field.name = fd.attribute("name");
 			field.type = fd.attribute("qtype");
-			field.index = fd.attribute("index", "false") == "true";
+			field.index = fd.attribute("key") == "index";
+			field.id = fd.attribute("key") == "id";
 			field.attr = fd.text();
 			field.note = fd.attribute("note");
 
@@ -73,6 +79,8 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		hpp.replace("$ConstructCommit$", getConstructCommitStr());
 		//字段总数
 		hpp.replace("$FieldSize$", QString::number(fieldList.size()));
+		//引擎类型
+		hpp.replace("$EngineType$", engine);
 		//表名
 		hpp.replace("$TbName$", prefix + tbName.toLower());
 		//字段名列表
@@ -81,6 +89,10 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		hpp.replace("$FieldType$", getFieldTypeStr());
 		//索引列表
 		hpp.replace("$FieldIndex$", getIndexStr());
+		//id
+		hpp.replace("$FieldId$", getIdField());
+		//id type
+		hpp.replace("$IdType$", getIdType());
 		//取值列表
 		hpp.replace("$ReadEntity$", getReadEntityStr());
 		//getter setter
@@ -194,21 +206,7 @@ QString Generator::getFieldStr() {
 	QString fieldStr;
 
 	for (const auto& field : fieldList) {
-		fieldStr.append(fieldT.arg(field.name, [=] {
-			QByteArray p1data = field.name.toLatin1();
-			QString result = "";
-			int i = 0;
-			int lastIndex = 0;
-			for (; i < p1data.size(); i++) {
-				char p1char = p1data.at(i);
-				if (p1char >= 65 && p1char <= 90) {
-					result += p1data.mid(lastIndex, i - lastIndex).toLower() + '_';
-					lastIndex = i;
-				}
-			}
-			result += p1data.mid(lastIndex).toLower();
-			return result;
-		}()));
+		fieldStr.append(fieldT.arg(field.name, lowerAndSplitWithUnderline(field.name)));
 	}
 
 	return fieldStr;
@@ -238,7 +236,7 @@ QString Generator::getFieldTypeStr() {
 	QString fieldTypeStr;
 
 	for (const auto& field : fieldList) {
-		fieldTypeStr.append(lt.arg(field.name, field.attr));
+		fieldTypeStr.append(lt.arg(lowerAndSplitWithUnderline(field.name), field.attr));
 	}
 
 	return fieldTypeStr;
@@ -255,6 +253,24 @@ QString Generator::getIndexStr() {
 	}
 
 	return fieldListStr;
+}
+
+QString Generator::getIdField() {
+	for (const auto& field : fieldList) {
+		if (field.id) {
+			return QString("\"%1\"").arg(field.name);
+		}
+	}
+	return "\"\"";
+}
+
+QString Generator::getIdType() {
+	for (const auto& field : fieldList) {
+		if (field.id) {
+			return field.type;
+		}
+	}
+	return "int";
 }
 
 QString Generator::getReadEntityStr() {
@@ -291,8 +307,9 @@ QString Generator::getGetterSetterStr() {
 QString Generator::getBindIdStr() {
 	QString bindIdStr = "";
 	for (const auto& field : fieldList) {
-		if (field.name == "id") {
-			bindIdStr = "\t\tsetId(id);";
+		if (field.id) {
+			bindIdStr = QString("\t\tset%1(id);").arg(upperFirstChar(field.name));
+			break;
 		}
 	}
 	return bindIdStr;
@@ -329,4 +346,20 @@ QString Generator::upperFirstChar(const QString& s) {
 	auto p1data = s.toLatin1();
 	char p1char = p1data.at(0);
 	return (char)(p1char - 32) + p1data.mid(1);
+}
+
+QString Generator::lowerAndSplitWithUnderline(const QString& s) {
+	QByteArray p1data = s.toLatin1();
+	QString result = "";
+	int i = 0;
+	int lastIndex = 0;
+	for (; i < p1data.size(); i++) {
+		char p1char = p1data.at(i);
+		if (p1char >= 65 && p1char <= 90) {
+			result += p1data.mid(lastIndex, i - lastIndex).toLower() + '_';
+			lastIndex = i;
+		}
+	}
+	result += p1data.mid(lastIndex).toLower();
+	return result;
 }

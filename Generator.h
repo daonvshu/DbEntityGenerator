@@ -13,6 +13,7 @@ private:
 		QString name;
 		QString type;
 		bool index;
+		bool id;
 		QString attr;
 		QString note;
 	};
@@ -25,12 +26,15 @@ private:
 	static QString getFieldListStr();
 	static QString getFieldTypeStr();
 	static QString getIndexStr();
+	static QString getIdField();
+	static QString getIdType();
 	static QString getReadEntityStr();
 	static QString getGetterSetterStr();
 	static QString getBindIdStr();
 	static QString getBindValueStr();
-
+	
 	static QString upperFirstChar(const QString & s);
+	static QString lowerAndSplitWithUnderline(const QString& s);
 
 private:
 	static QList<Field> fieldList;
