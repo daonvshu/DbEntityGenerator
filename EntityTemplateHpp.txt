@@ -10,13 +10,15 @@ $CustomCode$
 class $ClassName$ {
 private:
 $Members$
+	QMap<QString, QVariant> extraData;
+
 public:
 	$ClassName$() = default;
 	$ClassName$($ConstructFields$) {
 	$ConstructCommit$}
 
 public:
-	struct Fields {
+	struct Fields : public DaoEntityFunction {
 $Fields$
 		void bindJoin(int order) {
 			DaoEntityField::bindJoinOrder(order$BindFieldList$);
@@ -68,6 +70,11 @@ $BindId$
 		$BindValues$
 	}
 
+	void putExtraData(const QString& name, const QVariant& data) {
+		extraData.insert(name, data);
+	}
+
 $MemberGetterSetter$
+	inline QMap<QString, QVariant> getExtraData() const {return extraData;}
 };
 typedef QList<$ClassName$> $ClassName$List;

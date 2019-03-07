@@ -278,8 +278,12 @@ QString Generator::getReadEntityStr() {
 	QString readEntityStr;
 
 	for (const auto& field : fieldList) {
-		auto s1 = upperFirstChar(field.name);
-		readEntityStr.append(lt.arg(QString(s1)));
+		if (field.id) {
+			readEntityStr.append("\n\t\t\t<< QVariant()");
+		} else {
+			auto s1 = upperFirstChar(field.name);
+			readEntityStr.append(lt.arg(QString(s1)));
+		}
 	}
 
 	return readEntityStr;
