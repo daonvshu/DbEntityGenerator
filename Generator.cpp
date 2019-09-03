@@ -232,11 +232,11 @@ QString Generator::getFieldListStr() {
 }
 
 QString Generator::getFieldTypeStr() {
-	QString lt = "\n\t\t<< QStringLiteral(\"%1 %2\")";
+	QString lt = "\n\t\t<< QStringLiteral(\"%1 %2%3\")";
 	QString fieldTypeStr;
 
 	for (const auto& field : fieldList) {
-		fieldTypeStr.append(lt.arg(lowerAndSplitWithUnderline(field.name), field.attr));
+		fieldTypeStr.append(lt.arg(lowerAndSplitWithUnderline(field.name), field.attr, field.note.isEmpty() ? "" : (" comment '" + field.note + "'")));
 	}
 
 	return fieldTypeStr;
