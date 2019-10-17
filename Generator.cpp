@@ -8,6 +8,7 @@
 
 QList<Generator::Field> Generator::fieldList;
 bool Generator::generatorStart(const QString & xmlPath) {
+    qDebug() << xmlPath;
 	QDomDocument doc;
 	QFile file(xmlPath);
 	if (!file.open(QIODevice::ReadOnly)) {
@@ -141,9 +142,15 @@ bool Generator::generatorStart(const QString & xmlPath) {
 	}
 	
 	QString includeContent = "#pragma once\n\n";
+    QString entityNamesStr = "";
 	for (const auto& n : entityNames) {
 		includeContent.append(QString("#include \"%1.h\"\n").arg(n));
+        entityNamesStr.append(n).append(", ");
 	}
+    entityNamesStr = entityNamesStr.mid(0, entityNamesStr.length() - 2);
+    includeContent.append("\n#include \"../DaoUtil.h\"\n\n");
+    includeContent.append("static void DbTablesInit(bool& success) {\n\tDbCreator<" + entityNamesStr + ">::init(success);\n}\n");
+
 	QFile includeFile(filePathBase + "/DaoInclude.h");
 	includeFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
 	includeFile.write(includeContent.toLocal8Bit());
@@ -332,7 +339,7 @@ QString Generator::getBindValueStr() {
 		castType.insert("QByteArray", "ByteArray");
 	}
 
-	QString tp = "if (field == fields.%1()) {\n\t\t\tset%2(data.to%3());\n\t\t}";
+	QString tp = "if (field == fields.%1()) {\n\t\t\tset%2(data%3);\n\t\t}";
 	QString bindStr;
 
 	for (const auto& field : fieldList) {
@@ -340,7 +347,11 @@ QString Generator::getBindValueStr() {
 			bindStr.append(" else ");
 		}
 		auto s2 = upperFirstChar(field.name);
-		bindStr.append(tp.arg(field.name, s2, castType.contains(field.type) ? castType.value(field.type) : "unknown"));
+        if (field.type == "QVariant") {
+            bindStr.append(tp.arg(field.name, s2, ""));
+        } else {
+            bindStr.append(tp.arg(field.name, s2, ".to" + (castType.contains(field.type) ? castType.value(field.type) : "unknown") + "()"));
+        }
 	}
 
 	return bindStr;
