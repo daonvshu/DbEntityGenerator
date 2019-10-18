@@ -5,6 +5,7 @@
 #include <qmap.h>
 #include <qdebug.h>
 #include <qtextstream.h>
+#include <qdir.h>
 
 QList<Generator::Field> Generator::fieldList;
 bool Generator::generatorStart(const QString & xmlPath) {
@@ -40,9 +41,12 @@ bool Generator::generatorStart(const QString & xmlPath) {
 	QString prefix = root.attribute("prefix");
 	auto tbs = root.childNodes();
 	QStringList entityNames;
+    auto isMysql = isMysqlDatabase(filePathBase);
 	for (int i = 0; i < tbs.count(); i++) {
 		auto tb = tbs.at(i).toElement();
 		auto tbName = tb.attribute("name");
+        if (tbName.isEmpty())
+            continue;
 		entityNames << tbName;
 
 		QString engine = "";
@@ -87,7 +91,7 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		//字段名列表
 		hpp.replace("$FieldList$", getFieldListStr());
 		//字段类型列表
-		hpp.replace("$FieldType$", getFieldTypeStr());
+		hpp.replace("$FieldType$", getFieldTypeStr(isMysql));
 		//索引列表
 		hpp.replace("$FieldIndex$", getIndexStr());
 		//id
@@ -238,12 +242,12 @@ QString Generator::getFieldListStr() {
 	return fieldListStr;
 }
 
-QString Generator::getFieldTypeStr() {
+QString Generator::getFieldTypeStr(bool isMysql) {
 	QString lt = "\n\t\t<< QStringLiteral(\"%1 %2%3\")";
 	QString fieldTypeStr;
 
 	for (const auto& field : fieldList) {
-		fieldTypeStr.append(lt.arg(lowerAndSplitWithUnderline(field.name), field.attr, field.note.isEmpty() ? "" : (" comment '" + field.note + "'")));
+		fieldTypeStr.append(lt.arg(lowerAndSplitWithUnderline(field.name), field.attr, (!isMysql || field.note.isEmpty()) ? "" : (" comment '" + field.note + "'")));
 	}
 
 	return fieldTypeStr;
@@ -377,4 +381,28 @@ QString Generator::lowerAndSplitWithUnderline(const QString& s) {
 	}
 	result += p1data.mid(lastIndex).toLower();
 	return result;
+}
+
+bool Generator::isMysqlDatabase(const QString & xmlPath) {
+    QDir dir(xmlPath);
+    dir.cdUp();
+    auto xmlFiles = dir.entryInfoList(QStringList() << "*.xml");
+    for (auto info : xmlFiles) {
+        if (info.baseName() == "dao_cfg") {
+            QFile file(info.absoluteFilePath());
+            if (file.open(QIODevice::ReadOnly)) {
+                QDomDocument doc;
+                if (doc.setContent(&file)) {
+                    auto root = doc.documentElement();
+                    auto client = root.attribute("type");
+                    if (client == "mysql") {
+                        file.close();
+                        return true;
+                    }
+                }
+                file.close();
+            }
+        }
+    }
+    return false;
 }

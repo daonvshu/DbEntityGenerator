@@ -24,7 +24,7 @@ private:
 	static QString getFieldStr();
 	static QString getJoinBindFieldStr();
 	static QString getFieldListStr();
-	static QString getFieldTypeStr();
+	static QString getFieldTypeStr(bool isMysql);
 	static QString getIndexStr();
 	static QString getIdField();
 	static QString getIdType();
@@ -35,6 +35,7 @@ private:
 	
 	static QString upperFirstChar(const QString & s);
 	static QString lowerAndSplitWithUnderline(const QString& s);
+    static bool isMysqlDatabase(const QString& xmlPath);
 
 private:
 	static QList<Field> fieldList;
