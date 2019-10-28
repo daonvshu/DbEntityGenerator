@@ -213,7 +213,7 @@ QString Generator::getConstructCommitStr() {
 }
 
 QString Generator::getFieldStr() {
-	QString fieldT = "\t\tDaoEntityField %1 = \"%2\"_field;\n";
+	QString fieldT = "\t\tEntityField %1 = \"%2\";\n";
 	QString fieldStr;
 
 	for (const auto& field : fieldList) {
@@ -228,7 +228,7 @@ QString Generator::getJoinBindFieldStr() {
 	for (const auto& field : fieldList) {
 		fieldStr.append(", ").append(field.name);
 	}
-	return fieldStr;
+	return fieldStr.mid(2);
 }
 
 QString Generator::getFieldListStr() {
@@ -357,6 +357,7 @@ QString Generator::getBindValueStr() {
             bindStr.append(tp.arg(field.name, s2, ".to" + (castType.contains(field.type) ? castType.value(field.type) : "unknown") + "()"));
         }
 	}
+    bindStr.append(" else {\n\t\t\textraData.insert(field, data);\n\t\t}");
 
 	return bindStr;
 }
