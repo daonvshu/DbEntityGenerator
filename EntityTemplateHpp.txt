@@ -3,6 +3,8 @@
 
 #include "../EntityField.h"
 
+#include <qjsonobject.h>
+
 //************ CustomCodeArea ************
 $CustomCode$
 //!End
@@ -63,6 +65,25 @@ public:
 	/*can be called by nullptr*/
 	static QString getIdField() {
 		return $FieldId$;
+	}
+
+	static $ClassName$ json2Entity(const QJsonObject& object) {
+		$ClassName$ entity;
+		entity.fromJson(object);
+		return entity;
+	}
+
+	void fromJson(const QJsonObject& object) {
+$JsonToEntity$
+	}
+
+	QJsonObject toJson(QStringList execludeKeys = QStringList()) const {
+		QJsonObject object;
+$EntityToJson$
+		for (const auto& key : execludeKeys) {
+            object.remove(key);
+        }
+		return object;
 	}
 
 	QVariantList readEntity() const {

@@ -69,6 +69,7 @@ bool Generator::generatorStart(const QString & xmlPath) {
 			field.id = fd.attribute("key") == "id";
 			field.attr = fd.text();
 			field.note = fd.attribute("note");
+            field.jsonField = fd.attribute("jfield", field.name);
 
 			fieldList.append(field);
 		}
@@ -98,6 +99,10 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		hpp.replace("$FieldId$", getIdField());
 		//id type
 		hpp.replace("$IdType$", getIdType());
+        //json to entity
+        hpp.replace("$JsonToEntity$", getJson2EntityStr());
+        //entity to json
+        hpp.replace("$EntityToJson$", getEntity2JsonStr());
 		//取值列表
 		hpp.replace("$ReadEntity$", getReadEntityStr());
 		//getter setter
@@ -282,6 +287,39 @@ QString Generator::getIdType() {
 		}
 	}
 	return "int";
+}
+
+QString Generator::getJson2EntityStr() {
+    static QMap<QString, QString> castType;
+    if (castType.isEmpty()) {
+        castType.insert("long", "Variant().toLongLong");
+        castType.insert("qint64", "Variant().toLongLong");
+        castType.insert("QString", "String");
+        castType.insert("int", "Int");
+        castType.insert("double", "Double");
+        castType.insert("float", "Double");
+        castType.insert("bool", "Bool");
+        castType.insert("QByteArray", "Variant().toByteArray");
+    }
+    QString tp = "\t\t%1 = object.value(\"%2\").to%3();\n";
+    QString json2EntityStr;
+
+    for (const auto& field : fieldList) {
+        json2EntityStr.append(tp.arg(field.name, field.jsonField, (castType.contains(field.type) ? castType.value(field.type) : "unknown")));
+    }
+
+    return json2EntityStr;
+}
+
+QString Generator::getEntity2JsonStr() {
+    QString tp = "\t\tobject.insert(\"%1\", %2);\n";
+    QString entity2JsonStr;
+
+    for (const auto& field : fieldList) {
+        entity2JsonStr.append(tp.arg(field.jsonField, (field.type == "bool" ? "(int)" : "") + field.name));
+    }
+
+    return entity2JsonStr;
 }
 
 QString Generator::getReadEntityStr() {

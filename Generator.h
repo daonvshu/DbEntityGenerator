@@ -16,6 +16,7 @@ private:
 		bool id;
 		QString attr;
 		QString note;
+        QString jsonField;
 	};
 
 	static QString getMembersStr();
@@ -28,6 +29,8 @@ private:
 	static QString getIndexStr();
 	static QString getIdField();
 	static QString getIdType();
+    static QString getJson2EntityStr();
+    static QString getEntity2JsonStr();
 	static QString getReadEntityStr();
 	static QString getGetterSetterStr();
 	static QString getBindIdStr();
