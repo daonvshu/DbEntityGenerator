@@ -298,7 +298,7 @@ QString Generator::getJson2EntityStr() {
         castType.insert("int", "Int");
         castType.insert("double", "Double");
         castType.insert("float", "Double");
-        castType.insert("bool", "Bool");
+        castType.insert("bool", "Int");
         castType.insert("QByteArray", "Variant().toByteArray");
     }
     QString tp = "\t\t%1 = object.value(\"%2\").to%3();\n";
