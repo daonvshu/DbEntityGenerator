@@ -105,5 +105,6 @@ $BindId$
 
 $MemberGetterSetter$
 	inline QMap<QString, QVariant> getExtraData() const {return extraData;}
+	inline QMap<QString, QVariant>& getExtraData() {return extraData;}
 };
 typedef QList<$ClassName$> $ClassName$List;
