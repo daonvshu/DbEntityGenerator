@@ -299,12 +299,16 @@ QString Generator::getJson2EntityStr() {
         castType.insert("double", "Double");
         castType.insert("float", "Double");
         castType.insert("bool", "Int");
-        castType.insert("QByteArray", "Variant().toByteArray");
+        //castType.insert("QByteArray", "Variant().toByteArray");
     }
     QString tp = "\t\t%1 = object.value(\"%2\").to%3();\n";
     QString json2EntityStr;
 
     for (const auto& field : fieldList) {
+        if (field.type == "QByteArray") {
+            json2EntityStr.append(QString("\t\t%1 = QByteArray::fromBase64(object.value(\"%2\").toString().toUtf8());\n").arg(field.name, field.jsonField));
+            continue;
+        }
         json2EntityStr.append(tp.arg(field.name, field.jsonField, (castType.contains(field.type) ? castType.value(field.type) : "unknown")));
     }
 
@@ -316,6 +320,10 @@ QString Generator::getEntity2JsonStr() {
     QString entity2JsonStr;
 
     for (const auto& field : fieldList) {
+        if (field.type == "QByteArray") {
+            entity2JsonStr.append(tp.arg(field.jsonField, QString("QString(%1.toBase64())").arg(field.name)));
+            continue;
+        }
         entity2JsonStr.append(tp.arg(field.jsonField, (field.type == "bool" ? "(int)" : "") + field.name));
     }
 
