@@ -6,6 +6,7 @@
 #include <qdebug.h>
 #include <qtextstream.h>
 #include <qdir.h>
+#include <qcryptographichash.h>
 
 QList<Generator::Field> Generator::fieldList;
 bool Generator::generatorStart(const QString & xmlPath) {
@@ -117,24 +118,32 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		QStringList customCodeList;
 		QString lineBuffer;
 
+        QByteArray existContentHash;
 		if (hppFile.exists()) {
-			hppFile.open(QIODevice::ReadOnly);
+            if (hppFile.open(QIODevice::ReadOnly)) {
+                QTextStream in(&hppFile);
+                bool customStart = false;
+                QByteArray hppData;
+                while (!in.atEnd()) {
+                    lineBuffer = in.readLine();
+                    hppData.append(lineBuffer);
+                    hppData.append('\n');
+                    if (lineBuffer.contains("CustomCodeArea")) {
+                        customStart = true;
+                        continue;
+                    } else if (lineBuffer.contains("End")) {
+                        customStart = false;
+                    }
+                    if (customStart) {
+                        customCodeList.append(lineBuffer);
+                    }
+                }
 
-			QTextStream in(&hppFile);
-			bool customStart = false;
-			while (!in.atEnd()) {
-				lineBuffer = in.readLine();
-				if (lineBuffer.contains("CustomCodeArea")) {
-					customStart = true;
-					continue;
-				} else if (lineBuffer.contains("End")) {
-					break;
-				}
-				if (customStart) {
-					customCodeList.append(lineBuffer);
-				}
-			}
-			hppFile.close();
+                hppData = QString(hppData).replace(QRegExp("\\s"), "").toUtf8();
+                existContentHash = QCryptographicHash::hash(hppData, QCryptographicHash::Md5);
+
+                hppFile.close();
+            }
 		}
 		lineBuffer = "";
 		for (const auto& line : customCodeList) {
@@ -145,9 +154,13 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		}
 		hpp.replace("$CustomCode$", lineBuffer);
 
-		hppFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
-		hppFile.write(hpp.toLocal8Bit());
-		hppFile.close();
+        auto hppCotent = QString(hpp).replace(QRegExp("\\s"), "").toUtf8();
+        auto currentHash = QCryptographicHash::hash(hppCotent, QCryptographicHash::Md5);
+        if (existContentHash.compare(currentHash) != 0) {
+            hppFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+            hppFile.write(hpp.toLocal8Bit());
+            hppFile.close();
+        }
 	}
 	
 	QString includeContent = "#pragma once\n\n";
@@ -161,9 +174,22 @@ bool Generator::generatorStart(const QString & xmlPath) {
     includeContent.append("static void DbTablesInit(bool& success) {\n\tDbCreator<" + entityNamesStr + ">::init(success);\n}\n");
 
 	QFile includeFile(filePathBase + "/DaoInclude.h");
-	includeFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
-	includeFile.write(includeContent.toLocal8Bit());
-	includeFile.close();
+    QByteArray includeHash;
+    if (includeFile.exists()) {
+        if (includeFile.open(QIODevice::ReadOnly)) {
+            auto c = includeFile.readAll();
+            c = QString(c).replace(QRegExp("\\s"), "").toUtf8();
+            includeHash = QCryptographicHash::hash(c, QCryptographicHash::Md5);
+            includeFile.close();
+        }
+    }
+    auto ic = QString(includeContent).replace(QRegExp("\\s"), "").toUtf8();
+    auto includeContentHash = QCryptographicHash::hash(ic, QCryptographicHash::Md5);
+    if (includeHash.compare(includeContentHash) != 0) {
+        includeFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+        includeFile.write(includeContent.toLocal8Bit());
+        includeFile.close();
+    }
 
 	return true;
 }
