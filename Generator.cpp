@@ -70,7 +70,7 @@ bool Generator::generatorStart(const QString & xmlPath) {
 			field.id = fd.attribute("key") == "id";
 			field.attr = fd.text();
 			field.note = fd.attribute("note");
-            field.jsonField = fd.attribute("jfield", field.name);
+            field.jsonField = fd.attribute("jfield", lowerAndSplitWithUnderline(field.name));
 
 			fieldList.append(field);
 		}
