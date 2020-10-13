@@ -112,6 +112,10 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		hpp.replace("$BindId$", getBindIdStr());
 		//bindvalue
 		hpp.replace("$BindValues$", getBindValueStr());
+		//id≥ı ºªØ
+		if (isIdInteger()) {
+			hpp.replace("$FiedIdInit$", getIdFieldName() + " = -1;");
+		}
 
 		QFile hppFile(filePathBase + "/" + tbName + ".h");
 
@@ -171,7 +175,7 @@ bool Generator::generatorStart(const QString & xmlPath) {
 	}
     entityNamesStr = entityNamesStr.mid(0, entityNamesStr.length() - 2);
     includeContent.append("\n#include \"../DaoUtil.h\"\n\n");
-    includeContent.append("static void DbTablesInit(bool& success) {\n\tDbCreator<" + entityNamesStr + ">::init(success);\n}\n");
+    includeContent.append("static void DbTablesInit(bool& success) {\n    DbCreator<" + entityNamesStr + ">::init(success);\n}\n");
 
 	QFile includeFile(filePathBase + "/DaoInclude.h");
     QByteArray includeHash;
@@ -203,7 +207,7 @@ QString Generator::loadTemplateFile(const QString & name) {
 }
 
 QString Generator::getMembersStr() {
-	QString member = "\t%1 %2;%3\n";
+	QString member = "    %1 %2;%3\n";
 	QString memberStr;
 
 	for (const auto& field : fieldList) {
@@ -233,7 +237,7 @@ QString Generator::getConstructFieldsStr() {
 }
 
 QString Generator::getConstructCommitStr() {
-	QString ft = "\tthis->%1 = %1;\n\t";
+	QString ft = "    this->%1 = %1;\n    ";
 	QString commitStr;
 
 	for (const auto& field : fieldList) {
@@ -244,7 +248,7 @@ QString Generator::getConstructCommitStr() {
 }
 
 QString Generator::getFieldStr() {
-	QString fieldT = "\t\tEntityField %1 = \"%2\";\n";
+	QString fieldT = "        EntityField %1 = \"%2\";\n";
 	QString fieldStr;
 
 	for (const auto& field : fieldList) {
@@ -263,7 +267,7 @@ QString Generator::getJoinBindFieldStr() {
 }
 
 QString Generator::getFieldListStr() {
-	QString lt = "\n\t\t\t<< fields.%1()";
+	QString lt = "\n            << fields.%1()";
 	QString fieldListStr;
 
 	for (const auto& field : fieldList) {
@@ -274,7 +278,7 @@ QString Generator::getFieldListStr() {
 }
 
 QString Generator::getFieldTypeStr(bool isMysql) {
-	QString lt = "\n\t\t<< QStringLiteral(\"%1 %2%3\")";
+	QString lt = "\n        << QStringLiteral(\"%1 %2%3\")";
 	QString fieldTypeStr;
 
 	for (const auto& field : fieldList) {
@@ -285,7 +289,7 @@ QString Generator::getFieldTypeStr(bool isMysql) {
 }
 
 QString Generator::getIndexStr() {
-	QString lt = "\n\t\t\t<< fields.%1()";
+	QString lt = "\n            << fields.%1()";
 	QString fieldListStr;
 
 	for (const auto& field : fieldList) {
@@ -315,6 +319,26 @@ QString Generator::getIdType() {
 	return "int";
 }
 
+bool Generator::isIdInteger() {
+	for (const auto& field : fieldList) {
+		if (field.id) {
+			if (field.type == "long" || field.type == "qint64" || field.type == "int") {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+QString Generator::getIdFieldName() {
+	for (const auto& field : fieldList) {
+		if (field.id) {
+			return field.name;
+		}
+	}
+	return "";
+}
+
 QString Generator::getJson2EntityStr() {
     static QMap<QString, QString> castType;
     if (castType.isEmpty()) {
@@ -327,12 +351,12 @@ QString Generator::getJson2EntityStr() {
         castType.insert("bool", "Int");
         //castType.insert("QByteArray", "Variant().toByteArray");
     }
-    QString tp = "\t\t%1 = object.value(\"%2\").to%3();\n";
+    QString tp = "        %1 = object.value(\"%2\").to%3();\n";
     QString json2EntityStr;
 
     for (const auto& field : fieldList) {
         if (field.type == "QByteArray") {
-            json2EntityStr.append(QString("\t\t%1 = QByteArray::fromBase64(object.value(\"%2\").toString().toUtf8());\n").arg(field.name, field.jsonField));
+            json2EntityStr.append(QString("        %1 = QByteArray::fromBase64(object.value(\"%2\").toString().toUtf8());\n").arg(field.name, field.jsonField));
             continue;
         }
         json2EntityStr.append(tp.arg(field.name, field.jsonField, (castType.contains(field.type) ? castType.value(field.type) : "unknown")));
@@ -342,7 +366,7 @@ QString Generator::getJson2EntityStr() {
 }
 
 QString Generator::getEntity2JsonStr() {
-    QString tp = "\t\tobject.insert(\"%1\", %2);\n";
+    QString tp = "        object.insert(\"%1\", %2);\n";
     QString entity2JsonStr;
 
     for (const auto& field : fieldList) {
@@ -357,12 +381,12 @@ QString Generator::getEntity2JsonStr() {
 }
 
 QString Generator::getReadEntityStr() {
-	QString lt = "\n\t\t\t<< get%1()";
+	QString lt = "\n            << get%1()";
 	QString readEntityStr;
 
 	for (const auto& field : fieldList) {
 		if (field.id) {
-			readEntityStr.append("\n\t\t\t<< QVariant()");
+			readEntityStr.append("\n            << QVariant()");
 		} else {
 			auto s1 = upperFirstChar(field.name);
 			readEntityStr.append(lt.arg(QString(s1)));
@@ -373,8 +397,8 @@ QString Generator::getReadEntityStr() {
 }
 
 QString Generator::getGetterSetterStr() {
-	QString tp = "\tinline void set%1(%2 %3) {this->%3 = %3;}\n"
-		"\tinline %4 get%1() const {return %3;}\n";
+	QString tp = "    inline void set%1(%2 %3) {this->%3 = %3;}\n"
+		"    inline %4 get%1() const {return %3;}\n";
 	QString getsetStr;
 
 	for (const auto& field : fieldList) {
@@ -395,7 +419,7 @@ QString Generator::getBindIdStr() {
 	QString bindIdStr = "";
 	for (const auto& field : fieldList) {
 		if (field.id) {
-			bindIdStr = QString("\t\tset%1(id);").arg(upperFirstChar(field.name));
+			bindIdStr = QString("        set%1(id);").arg(upperFirstChar(field.name));
 			break;
 		}
 	}
@@ -415,7 +439,7 @@ QString Generator::getBindValueStr() {
 		castType.insert("QByteArray", "ByteArray");
 	}
 
-	QString tp = "if (field == fields.%1()) {\n\t\t\tset%2(data%3);\n\t\t}";
+	QString tp = "if (field == fields.%1()) {\n            set%2(data%3);\n        }";
 	QString bindStr;
 
 	for (const auto& field : fieldList) {
@@ -429,7 +453,7 @@ QString Generator::getBindValueStr() {
             bindStr.append(tp.arg(field.name, s2, ".to" + (castType.contains(field.type) ? castType.value(field.type) : "unknown") + "()"));
         }
 	}
-    bindStr.append(" else {\n\t\t\textraData.insert(field, data);\n\t\t}");
+    bindStr.append(" else {\n            extraData.insert(field, data);\n        }");
 
 	return bindStr;
 }

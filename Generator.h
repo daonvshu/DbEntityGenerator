@@ -29,6 +29,8 @@ private:
 	static QString getIndexStr();
 	static QString getIdField();
 	static QString getIdType();
+	static bool isIdInteger();
+	static QString getIdFieldName();
     static QString getJson2EntityStr();
     static QString getEntity2JsonStr();
 	static QString getReadEntityStr();

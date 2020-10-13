@@ -12,99 +12,101 @@ $CustomCode$
 class $ClassName$ {
 private:
 $Members$
-	QMap<QString, QVariant> extraData;
+    QMap<QString, QVariant> extraData;
 
 public:
-	$ClassName$() = default;
-	$ClassName$($ConstructFields$) {
-	$ConstructCommit$}
+    $ClassName$() {
+        $FiedIdInit$
+    }
+    $ClassName$($ConstructFields$) {
+    $ConstructCommit$}
 
 public:
-	struct Fields : public EntityFunction {
+    struct Fields : public EntityFunction {
 $Fields$
-		void bindJoin(int order) {
-			EntityField::bindTableOrder(order, $BindFieldList$);
-		}
+        void bindJoin(int order) {
+            EntityField::bindTableOrder(order, $BindFieldList$);
+        }
 
-		void clearJoin() {
+        void clearJoin() {
             EntityField::clearTableOrder($BindFieldList$);
         }
 
-		EntityConditions all() {
-			return ($BindFieldList$);
-		}
-	};
+        EntityConditions all() {
+            return ($BindFieldList$);
+        }
+    };
 
 public:
-	/*can be called by nullptr*/
-	static int fieldSize() {
-		return $FieldSize$;
-	}
-	/*can be called by nullptr*/
-	static QString engine() {
-		return "$EngineType$";
-	}
-	/*can be called by nullptr*/
-	static QString getTableName() {
-		return QStringLiteral("$TbName$");
-	}
-	/*can be called by nullptr*/
-	static QStringList getFields() {
-		Fields fields;
-		return QStringList() $FieldList$;
-	}
-	/*can be called by nullptr*/
-	static QStringList getFieldsType() {
-		return QStringList() $FieldType$;
-	}
-	/*can be called by nullptr*/
-	static QStringList getIndexFields() {
-		Fields fields;
-		return QStringList() $FieldIndex$;
-	}
-	/*can be called by nullptr*/
-	static QString getIdField() {
-		return $FieldId$;
-	}
+    /*can be called by nullptr*/
+    static int fieldSize() {
+        return $FieldSize$;
+    }
+    /*can be called by nullptr*/
+    static QString engine() {
+        return "$EngineType$";
+    }
+    /*can be called by nullptr*/
+    static QString getTableName() {
+        return QStringLiteral("$TbName$");
+    }
+    /*can be called by nullptr*/
+    static QStringList getFields() {
+        Fields fields;
+        return QStringList() $FieldList$;
+    }
+    /*can be called by nullptr*/
+    static QStringList getFieldsType() {
+        return QStringList() $FieldType$;
+    }
+    /*can be called by nullptr*/
+    static QStringList getIndexFields() {
+        Fields fields;
+        return QStringList() $FieldIndex$;
+    }
+    /*can be called by nullptr*/
+    static QString getIdField() {
+        return $FieldId$;
+    }
 
-	static $ClassName$ json2Entity(const QJsonObject& object) {
-		$ClassName$ entity;
-		entity.fromJson(object);
-		return entity;
-	}
+    static $ClassName$ json2Entity(const QJsonObject& object) {
+        $ClassName$ entity;
+        entity.fromJson(object);
+        return entity;
+    }
 
-	void fromJson(const QJsonObject& object) {
+    void fromJson(const QJsonObject& object) {
 $JsonToEntity$
-	}
+    }
 
-	QJsonObject toJson(QStringList execludeKeys = QStringList()) const {
-		QJsonObject object;
+    QJsonObject toJson(QStringList execludeKeys = QStringList()) const {
+        QJsonObject object;
 $EntityToJson$
-		for (const auto& key : execludeKeys) {
+        for (const auto& key : execludeKeys) {
             object.remove(key);
         }
-		return object;
-	}
+        return object;
+    }
 
-	QVariantList readEntity() const {
-		return QVariantList() $ReadEntity$;
-	}
+    QVariantList readEntity() const {
+        return QVariantList() $ReadEntity$;
+    }
 
-	void bindId($IdType$ id) {
+    void bindId($IdType$ id) {
 $BindId$
-	}
+    }
 
-	void bindValue(const QString& field, const QVariant& data) {
-		Fields fields;
-		$BindValues$
-	}
+    void bindValue(const QString& field, const QVariant& data) {
+        Fields fields;
+        $BindValues$
+    }
 
-	void putExtraData(const QString& name, const QVariant& data) {
-		extraData.insert(name, data);
-	}
+    void putExtraData(const QString& name, const QVariant& data) {
+        extraData.insert(name, data);
+    }
 
 $MemberGetterSetter$
-	inline QMap<QString, QVariant> getExtraData() const {return extraData;}
-	inline QMap<QString, QVariant>& getExtraData() {return extraData;}
+    inline QMap<QString, QVariant> getExtraData() const {return extraData;}
+    inline QMap<QString, QVariant>& getExtraData() {return extraData;}
 };
 typedef QList<$ClassName$> $ClassName$List;
