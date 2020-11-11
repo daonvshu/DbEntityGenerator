@@ -8,24 +8,20 @@
 #include <qdir.h>
 #include <qcryptographichash.h>
 
+#include "ConfigLoader.h"
+
 QList<Generator::Field> Generator::fieldList;
 bool Generator::generatorStart(const QString & xmlPath) {
-    qDebug() << xmlPath;
-	QDomDocument doc;
-	QFile file(xmlPath);
-	if (!file.open(QIODevice::ReadOnly)) {
-		qDebug() << "open file fail!";
-		return false;
+    
+	ConfigLoader loader(xmlPath);
+	if (!loader.load()) {
+		return;
 	}
-	QString errMsg;
-	int errLine;
-	int errCol;
-	if (!doc.setContent(&file, &errMsg, &errLine, &errCol)) {
-		file.close();
-		qDebug() << "load dom fail!err:" << errMsg << " line:" << errLine << " col:" << errCol;
-		return false;
+
+	switch (loader.getSqlType()) {
+
 	}
-	file.close();
+
 
 	QFileInfo fileInfo(file);
 	auto filePathBase = fileInfo.absolutePath();
