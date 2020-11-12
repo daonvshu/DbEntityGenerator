@@ -38,39 +38,41 @@ public:
     , varianttype(varianttype)
     { }
 
-private:
-    static int fieldSize() {
-        return 5;
-    }
+public:
+    struct Info {
+        static int fieldSize() {
+            return 5;
+        }
 
-    static QString getTableName() {
-        return QStringLiteral("ts_test2");
-    }
-    
-    static QStringList getFieldsType() {
-        return QStringList() 
-        << QStringLiteral("id integer autoincrement")
-        << QStringLiteral("name text not null")
-        << QStringLiteral("number integer default 0")
-        << QStringLiteral("number2 integer")
-        << QStringLiteral("varianttype blob")
-        << QStringLiteral("nametmp text");
-    }
+        static QString getTableName() {
+            return QStringLiteral("ts_test2");
+        }
 
-    static QStringList getPrimaryKeys() {
-        return QStringList() << "id";
-    }
-    
-    static QList<QStringList> getIndexFields() {
-        return QList<QStringList>()
-        << (QStringList() << "number2")
-        << (QStringList() << "number" << "number2");
-    }
+        static QStringList getFieldsType() {
+            return QStringList() 
+                << QStringLiteral("id integer autoincrement")
+                << QStringLiteral("name text not null")
+                << QStringLiteral("number integer default 0")
+                << QStringLiteral("number2 integer")
+                << QStringLiteral("varianttype blob")
+                << QStringLiteral("nametmp text");
+        }
 
-    static QList<QStringList> getUniqueIndexFields() {
-        return QList<QStringList>()
-        << (QStringList() << "name" << "number");
-    }
+        static QStringList getPrimaryKeys() {
+            return QStringList() << "id";
+        }
+
+        static QList<QStringList> getIndexFields() {
+            return QList<QStringList>()
+                << (QStringList() << "number2")
+                << (QStringList() << "number" << "number2");
+        }
+
+        static QList<QStringList> getUniqueIndexFields() {
+            return QList<QStringList>()
+                << (QStringList() << "name" << "number");
+        }
+    };
 
 public:
     //set 自增长主键

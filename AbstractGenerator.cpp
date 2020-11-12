@@ -79,6 +79,7 @@ void AbstractGenerator::writeTableHeaderByDiff(const QString& content, const Tab
 #define ADD_s(STR)   ADD('\'' + STR + '\'')
 #define TAB_1              ADD("    ")
 #define TAB_2             ADD("        ")
+#define TAB_4             ADD("                ")
 #define ENTER             ADD("\n")
 #define SPACE              ADD(" ")
 #define COMMENT_2   ADD("//")
@@ -213,7 +214,7 @@ QString AbstractGenerator::createDatabaseType() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
         ENTER;
-        TAB_2;
+        TAB_4;
         ADD("<< QStringLiteral(\"");
         ADD(field.name);
         SPACE;
@@ -259,7 +260,7 @@ QString AbstractGenerator::createIndexFields(QString indexType) {
     INDEX_FOREACH(tb.indexes) {
         if (index.indexType == indexType) {
             ENTER;
-            TAB_2;
+            TAB_4;
             ADD("<< (QStringList()");
             for (const auto& s : index.fields) {
                 ADD(" << ");

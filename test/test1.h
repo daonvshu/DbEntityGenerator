@@ -32,34 +32,36 @@ public:
     , hex(hex)
     { }
 
-private:
-    static int fieldSize() {
-        return 4;
-    }
+public:
+    struct Info {
+        static int fieldSize() {
+            return 4;
+        }
 
-    static QString getTableName() {
-        return QStringLiteral("ts_test1");
-    }
-    
-    static QStringList getFieldsType() {
-        return QStringList() 
-        << QStringLiteral("id integer")
-        << QStringLiteral("name text default 'text'")
-        << QStringLiteral("number real default 10.0")
-        << QStringLiteral("hex blob");
-    }
+        static QString getTableName() {
+            return QStringLiteral("ts_test1");
+        }
 
-    static QStringList getPrimaryKeys() {
-        return QStringList() << "id" << "name";
-    }
-    
-    static QList<QStringList> getIndexFields() {
-        return QList<QStringList>();
-    }
+        static QStringList getFieldsType() {
+            return QStringList() 
+                << QStringLiteral("id integer")
+                << QStringLiteral("name text default 'text'")
+                << QStringLiteral("number real default 10.0")
+                << QStringLiteral("hex blob");
+        }
 
-    static QList<QStringList> getUniqueIndexFields() {
-        return QList<QStringList>();
-    }
+        static QStringList getPrimaryKeys() {
+            return QStringList() << "id" << "name";
+        }
+
+        static QList<QStringList> getIndexFields() {
+            return QList<QStringList>();
+        }
+
+        static QList<QStringList> getUniqueIndexFields() {
+            return QList<QStringList>();
+        }
+    };
 
 public:
     //set Ö÷¼ü

@@ -16,30 +16,32 @@ $ConstructFields$
     ) : $ConstructCommit$
     { }
 
-private:
-    static int fieldSize() {
-        return $FieldSize$;
-    }
+public:
+    struct Info {
+        static int fieldSize() {
+            return $FieldSize$;
+        }
 
-    static QString getTableName() {
-        return QStringLiteral("$TbName$");
-    }
-    
-    static QStringList getFieldsType() {
-        return QStringList() $FieldType$;
-    }
+        static QString getTableName() {
+            return QStringLiteral("$TbName$");
+        }
 
-    static QStringList getPrimaryKeys() {
-        return QStringList()$PrimaryKey$;
-    }
-    
-    static QList<QStringList> getIndexFields() {
-        return QList<QStringList>()$FieldIndex$;
-    }
+        static QStringList getFieldsType() {
+            return QStringList() $FieldType$;
+        }
 
-    static QList<QStringList> getUniqueIndexFields() {
-        return QList<QStringList>()$UniqueFieldIndex$;
-    }
+        static QStringList getPrimaryKeys() {
+            return QStringList()$PrimaryKey$;
+        }
+
+        static QList<QStringList> getIndexFields() {
+            return QList<QStringList>()$FieldIndex$;
+        }
+
+        static QList<QStringList> getUniqueIndexFields() {
+            return QList<QStringList>()$UniqueFieldIndex$;
+        }
+    };
 
 public:$MemberGetterSetter$
 };
