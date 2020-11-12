@@ -100,5 +100,5 @@ QString SqliteGenerator::getComment(const QString& note) {
 }
 
 QString SqliteGenerator::getAutoIncrementStatement() {
-    return QString("autoincrement");
+    return QString("auto_increment");
 }
