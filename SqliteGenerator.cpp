@@ -1,11 +1,8 @@
 #include "SqliteGenerator.h"
 
-#include <qcryptographichash.h>
-#include <qfile.h>
-#include <qregexp.h>
-
 SqliteGenerator::SqliteGenerator(QString outputPath, SqliteEntity entity)
-    : outputPath(outputPath)
+    : AbstractGenerator(outputPath)
+    , outputPath(outputPath)
     , entity(entity)
 {
 }
@@ -13,36 +10,95 @@ SqliteGenerator::SqliteGenerator(QString outputPath, SqliteEntity entity)
 void SqliteGenerator::generate() {
     QString hppTemplate = loadTemplateFile(":/generator/templates/sqlite.txt");
     for (const auto& tb : entity.tables) {
+        setCurrentTable(tb);
         auto header = hppTemplate;
         //set classname
         header.replace("$ClassName$", tb.name);
-        //set member list
+        //set field list
+        header.replace("$Members$", createFieldList());
+        //set construct
+        header.replace("$FiedIdInit$", createDefaultConstruct());
+        header.replace("$ConstructFields$", createConstructField());
+        header.replace("$ConstructCommit$", createConstructCommit());
+        //set field size
+        header.replace("$FieldSize$", createFieldSize());
+        //set tablename
+        header.replace("$TbName$", createTableName(entity.prefix));
+        //set database type
+        header.replace("$FieldType$", createDatabaseType());
+        //set primary keys
+        header.replace("$PrimaryKey$", createPrimaryKeys());
+        //set index
+        header.replace("$FieldIndex$", createIndexFields());
+        header.replace("$UniqueFieldIndex$", createIndexFields("unique index"));
+        //setter and getter
+        header.replace("$MemberGetterSetter$", createSetterGetter());
+        //set meta type
+        header.replace("$DECLARE_META_TYPE$", createMetaType());
 
+        writeTableHeaderByDiff(header, tb);
     }
 }
 
-QString SqliteGenerator::getOutputFilePath(const Table& table) {
-    return QString("%1/%2.h").arg(outputPath).arg(table.name);
-}
-
-QByteArray SqliteGenerator::getFileMd5(const QString& filePath) {
-    QFile file(filePath);
-    if (file.open(QIODevice::ReadOnly)) {
-        QByteArray data = file.readAll();
-        file.close();
-
-        data = QString(data).replace(QRegExp("\\s"), "").toUtf8();
-        if (!data.isEmpty()) {
-            return QCryptographicHash::hash(data, QCryptographicHash::Md5);
-        }
+QString SqliteGenerator::getFieldCppType(const QString& fieldType) {
+    if (fieldType == "int") {
+        return "int";
     }
-    return QByteArray();
+    if (fieldType == "long") {
+        return "qint64";
+    }
+    if (fieldType == "real") {
+        return "qreal";
+    }
+    if (fieldType == "text") {
+        return "QString";
+    }
+    if (fieldType == "blob") {
+        return "QByteArray";
+    }
+    if (fieldType == "variant") {
+        return "QVariant";
+    }
+    return QString("unknown");
 }
 
-QString SqliteGenerator::loadTemplateFile(const QString& name) {
-    QFile file(name);
-    file.open(QIODevice::ReadOnly);
-    auto data = file.readAll();
-    file.close();
-    return data;
+bool SqliteGenerator::checkFieldStrType(const QString& fieldType) {
+    if (fieldType == "text") {
+        return true;
+    }
+    return false;
+}
+
+bool SqliteGenerator::checkFieldDecimalType(const QString& fieldType) {
+    if (fieldType == "int") {
+        return true;
+    }
+    if (fieldType == "long") {
+        return true;
+    }
+    if (fieldType == "real") {
+        return true;
+    }
+    return false;
+}
+
+QString SqliteGenerator::getDatabaseFieldType(const QString& fieldType) {
+    if (fieldType == "int") {
+        return "integer";
+    }
+    if (fieldType == "long") {
+        return "integer";
+    }
+    if (fieldType == "variant") {
+        return "blob";
+    }
+    return fieldType;
+}
+
+QString SqliteGenerator::getComment(const QString& note) {
+    return QString();
+}
+
+QString SqliteGenerator::getAutoIncrementStatement() {
+    return QString("autoincrement");
 }

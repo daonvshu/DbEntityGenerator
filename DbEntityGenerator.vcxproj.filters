@@ -24,6 +24,9 @@
     <Filter Include="Source Files\generator">
       <UniqueIdentifier>{7c4b1660-08cd-46bc-80b8-5a8b9c5a686b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\test">
+      <UniqueIdentifier>{dd5ccaad-d708-4a11-b62a-2ae24f7427ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SqliteGenerator.cpp">
+      <Filter>Source Files\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractGenerator.cpp">
       <Filter>Source Files\generator</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,6 +57,15 @@
     </ClInclude>
     <ClInclude Include="SqliteGenerator.h">
       <Filter>Header Files\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractGenerator.h">
+      <Filter>Header Files\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test1.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test2.h">
+      <Filter>Header Files\test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

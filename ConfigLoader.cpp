@@ -47,10 +47,11 @@ bool ConfigLoader::load() {
 
 	if (dbType == "sqlite") {
 		data = new SqliteEntity;
+		configType = TYPE_SQLITE;
 	} else if (dbType == "mysql") {
-		
+		configType = TYPE_MYSQL;
 	} else if (dbType == "sqlserver") {
-
+		configType = TYPE_SQLSERVER;
 	} else {
 		qDebug() << "unknown db type";
 		return false;
@@ -65,9 +66,9 @@ bool ConfigLoader::load() {
 		if (tableData.name.isEmpty()) {
 			continue;
 		}
-		tableData.metatype = tbNode.attribute("declaremetatype", "0").toInt();
+		tableData.metatype = QVariant(tbNode.attribute("declaremetatype", "0")).toBool();
 		auto itemNodes = tbNode.childNodes();
-		for (int j = 0; i < itemNodes.count(); j++) {
+		for (int j = 0; j < itemNodes.count(); j++) {
 			auto itemNode = itemNodes.at(j).toElement();
 			if (itemNode.nodeName() == "item") {
 				Field field;
@@ -76,8 +77,8 @@ bool ConfigLoader::load() {
 				field.note = itemNode.attribute("note");
 				field.constraint = itemNode.attribute("constraints");
 				field.default = itemNode.attribute("default");
-				field.autoincreament = itemNode.attribute("autoincrement", "0").toInt();
-				field.transient = itemNode.attribute("transient", "0").toInt();
+				field.autoincreament = QVariant(itemNode.attribute("autoincrement", "0")).toBool();
+				field.transient = QVariant(itemNode.attribute("transient", "0")).toBool();
 				tableData.fields << field;
 			} else if (itemNode.nodeName() == "index") {
 				Index index;

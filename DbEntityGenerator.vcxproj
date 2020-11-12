@@ -87,16 +87,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractGenerator.cpp" />
     <ClCompile Include="ConfigLoader.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SqliteGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractGenerator.h" />
     <ClInclude Include="ConfigLoader.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="SqliteGenerator.h" />
+    <ClInclude Include="test\test1.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="test\test2.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="Resource.qrc" />

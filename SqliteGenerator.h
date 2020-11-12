@@ -2,7 +2,9 @@
 
 #include "Entity.h"
 
-class SqliteGenerator {
+#include "AbstractGenerator.h"
+
+class SqliteGenerator : public AbstractGenerator {
 public:
     SqliteGenerator(QString outputPath, SqliteEntity entity);
 
@@ -12,9 +14,11 @@ private:
     QString outputPath;
     SqliteEntity entity;
 
-private:
-    QString getOutputFilePath(const Table& table);
-    QByteArray getFileMd5(const QString& filePath);
-    QString loadTemplateFile(const QString& name);
-
+protected:
+    QString getFieldCppType(const QString& fieldType);
+    bool checkFieldStrType(const QString& fieldType);
+    bool checkFieldDecimalType(const QString& fieldType);
+    QString getDatabaseFieldType(const QString& fieldType);
+    QString getComment(const QString& note);
+    QString getAutoIncrementStatement();
 };
