@@ -54,8 +54,7 @@ public:
                 << QStringLiteral("name text")
                 << QStringLiteral("number integer default 0")
                 << QStringLiteral("number2 integer")
-                << QStringLiteral("varianttype blob")
-                << QStringLiteral("nametmp text");
+                << QStringLiteral("varianttype blob");
         }
 
         static QStringList getPrimaryKeys() {

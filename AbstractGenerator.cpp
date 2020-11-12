@@ -217,6 +217,9 @@ QString AbstractGenerator::createTableName(const QString& prefix) {
 QString AbstractGenerator::createDatabaseType() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
         ENTER;
         TAB_4;
         ADD("<< QStringLiteral(\"");
@@ -251,6 +254,9 @@ QString AbstractGenerator::createDatabaseType() {
 QString AbstractGenerator::createPrimaryKeys() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
         if (field.constraint == "primary key") {
             ADD(" << ");
             ADD_S(field.name);
