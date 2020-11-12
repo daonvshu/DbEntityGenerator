@@ -50,8 +50,8 @@ public:
 
         static QStringList getFieldsType() {
             return QStringList() 
-                << QStringLiteral("id integer autoincrement")
-                << QStringLiteral("name text not null")
+                << QStringLiteral("id integer primary key autoincrement")
+                << QStringLiteral("name text")
                 << QStringLiteral("number integer default 0")
                 << QStringLiteral("number2 integer")
                 << QStringLiteral("varianttype blob")

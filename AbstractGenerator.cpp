@@ -111,6 +111,7 @@ ADD(field.name)
 QString AbstractGenerator::createFieldList() {
     TP_START;
     QList<Field> transientFields;
+    currentPrimaryKeySize = 0;
     FIELD_FOREACH(tb.fields) {
         if (!field.transient) {
             TAB_1;
@@ -119,6 +120,9 @@ QString AbstractGenerator::createFieldList() {
         } else {
             transientFields << field;
             continue;
+        }
+        if (field.constraint == "primary key") {
+            currentPrimaryKeySize++;
         }
         ENTER;
         TAB_1;
@@ -229,14 +233,14 @@ QString AbstractGenerator::createDatabaseType() {
             }
         }
         if (!field.constraint.isEmpty()) {
-            if (field.constraint != "primary key") {
+            if (field.constraint == "primary key" && currentPrimaryKeySize == 1) {
                 SPACE;
                 ADD(field.constraint);
+                if (field.autoincreament) {
+                    SPACE;
+                    ADD(getAutoIncrementStatement());
+                }
             }
-        }
-        if (field.autoincreament) {
-            SPACE;
-            ADD(getAutoIncrementStatement());
         }
         ADD(getComment(field.note));
         ADD("\")");

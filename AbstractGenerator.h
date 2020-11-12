@@ -12,6 +12,7 @@ protected:
     QString outputPath;
     Table tb;
     int currentFieldSize;
+    int currentPrimaryKeySize;
 
 protected:
     QString getOutputFilePath(const Table& table);
