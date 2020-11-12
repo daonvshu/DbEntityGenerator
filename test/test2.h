@@ -50,7 +50,7 @@ public:
 
         static QStringList getFieldsType() {
             return QStringList() 
-                << QStringLiteral("id integer auto_increment")
+                << QStringLiteral("id integer autoincrement")
                 << QStringLiteral("name text not null")
                 << QStringLiteral("number integer default 0")
                 << QStringLiteral("number2 integer")
