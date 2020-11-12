@@ -69,7 +69,7 @@ public:
 
         static QList<QStringList> getUniqueIndexFields() {
             return QList<QStringList>()
-                << (QStringList() << "name" << "number");
+                << (QStringList() << "name asc" << "number desc");
         }
     };
 

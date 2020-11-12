@@ -85,7 +85,13 @@ bool ConfigLoader::load() {
 				index.indexType = itemNode.attribute("type", "index");
 				auto indexFieldNodes = itemNode.childNodes();
 				for (int k = 0; k < indexFieldNodes.size(); k++) {
-					index.fields << indexFieldNodes.at(k).toElement().text();
+					auto ele = indexFieldNodes.at(k).toElement();
+					QString seq = ele.attribute("seq");
+					if (seq.isEmpty()) {
+						index.fields << ele.text();
+					} else {
+						index.fields << ele.text() + ' ' + seq;
+					}
 				}
 				tableData.indexes << index;
 			}
