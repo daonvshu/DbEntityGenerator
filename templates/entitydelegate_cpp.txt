@@ -6,6 +6,10 @@ namespace $SqlType$ {
         DbLoader::getClient().createTables<$EntityList$>();
     }
 
+    void EntityDelegate::entityTablesUpgrade() {
+        DbLoader::getClient().tablesUpgrade<$EntityList$>();
+    }
+
     const int entityDelegateId = qRegisterMetaType<EntityDelegate*>();
 }
 

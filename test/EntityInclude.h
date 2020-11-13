@@ -10,6 +10,8 @@ namespace DaoSqlite {
         Q_INVOKABLE explicit EntityDelegate() {}
 
         Q_INVOKABLE void createEntityTables();
+
+        Q_INVOKABLE void entityTablesUpgrade();
     };
 }
 Q_DECLARE_METATYPE(DaoSqlite::EntityDelegate*);

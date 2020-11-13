@@ -26,6 +26,8 @@ void SqliteGenerator::generate() {
         header.replace("$FieldSize$", createFieldSize());
         //set tablename
         header.replace("$TbName$", createTableName(entity.prefix));
+        //set fields
+        header.replace("$Fields$", createFields());
         //set database type
         header.replace("$FieldType$", createDatabaseType());
         //set primary keys

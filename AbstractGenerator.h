@@ -43,6 +43,7 @@ protected:
     QString createConstructCommit();
     QString createFieldSize();
     QString createTableName(const QString& prefix);
+    QString createFields();
     QString createDatabaseType();
     QString createPrimaryKeys();
     QString createIndexFields(QString indexType = "index");

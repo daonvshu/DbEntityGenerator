@@ -48,6 +48,15 @@ public:
             return QStringLiteral("ts_test2");
         }
 
+        static QStringList getFields() {
+            return QStringList()
+                << "id"
+                << "name"
+                << "number"
+                << "number2"
+                << "varianttype";
+        }
+
         static QStringList getFieldsType() {
             return QStringList() 
                 << QStringLiteral("id integer primary key autoincrement")

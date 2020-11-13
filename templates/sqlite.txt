@@ -26,6 +26,10 @@ public:
             return QStringLiteral("$TbName$");
         }
 
+        static QStringList getFields() {
+            return QStringList()$Fields$;
+        }
+
         static QStringList getFieldsType() {
             return QStringList() $FieldType$;
         }

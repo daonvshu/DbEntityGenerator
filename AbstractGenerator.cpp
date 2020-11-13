@@ -110,7 +110,7 @@ ADD("const " + getFieldCppType(field.type) + "&");\
 SPACE;\
 ADD(field.name)
 
-#define USE_LEFT(size)    str = str.left(str.length() - size)
+#define USE_LEFT(size)    str.chop(size)
 #define FIELD_INIT(field)   ADD(field + '(' + field + ')')
 
 QString AbstractGenerator::createFieldList() {
@@ -217,6 +217,21 @@ QString AbstractGenerator::createFieldSize() {
 
 QString AbstractGenerator::createTableName(const QString& prefix) {
     return prefix + tb.name.toLower();
+}
+
+QString AbstractGenerator::createFields() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        ENTER;
+        TAB_4;
+        ADD("<< \"");
+        ADD(field.name);
+        ADD("\"");
+    }
+    TP_END;
 }
 
 QString AbstractGenerator::createDatabaseType() {
@@ -360,7 +375,7 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
         entityListStr.append(name).append(",");
     }
     cpp.replace("$EntityHeaders$", entityHeaders);
-    cpp.replace("$EntityList$", entityListStr.left(entityListStr.length() - 1));
+    cpp.replace("$EntityList$", entityListStr.chopped(1));
     if (!dbloadPath.isEmpty() && !dbloadPath.endsWith("/")) {
         dbloadPath += "/";
     }

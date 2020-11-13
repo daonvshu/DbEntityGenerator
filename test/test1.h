@@ -42,6 +42,14 @@ public:
             return QStringLiteral("ts_test1");
         }
 
+        static QStringList getFields() {
+            return QStringList()
+                << "id"
+                << "name"
+                << "number"
+                << "hex";
+        }
+
         static QStringList getFieldsType() {
             return QStringList() 
                 << QStringLiteral("id integer")

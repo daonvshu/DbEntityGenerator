@@ -8,6 +8,10 @@ namespace DaoSqlite {
         DbLoader::getClient().createTables<Test1,Test2>();
     }
 
+    void EntityDelegate::entityTablesUpgrade() {
+        DbLoader::getClient().tablesUpgrade<Test1,Test2>();
+    }
+
     const int entityDelegateId = qRegisterMetaType<EntityDelegate*>();
 }
 
