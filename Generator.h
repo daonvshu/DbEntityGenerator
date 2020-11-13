@@ -4,6 +4,6 @@
 
 class Generator {
 public:
-	static bool generatorStart(const QString& xmlPath);
+	static bool generatorStart(const QString& xmlPath, const QString& dbloaderPath);
 };
 

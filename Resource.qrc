@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/generator">
         <file>templates/sqlite.txt</file>
+        <file>templates/entitydelegate_cpp.txt</file>
+        <file>templates/entitydelegate_h.txt</file>
     </qresource>
 </RCC>

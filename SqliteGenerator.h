@@ -6,7 +6,7 @@
 
 class SqliteGenerator : public AbstractGenerator {
 public:
-    SqliteGenerator(QString outputPath, SqliteEntity entity);
+    SqliteGenerator(QString outputPath, SqliteEntity entity, QString dbloadPath);
 
     void generate();
 
@@ -21,4 +21,6 @@ protected:
     QString getDatabaseFieldType(const QString& fieldType);
     QString getComment(const QString& note);
     QString getAutoIncrementStatement();
+
+    QString getSqlNamespaceName();
 };

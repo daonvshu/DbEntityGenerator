@@ -44,6 +44,9 @@
     <ClCompile Include="AbstractGenerator.cpp">
       <Filter>Source Files\generator</Filter>
     </ClCompile>
+    <ClCompile Include="test\EntityInclude.cpp">
+      <Filter>Header Files\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generator.h">
@@ -82,5 +85,16 @@
     <Text Include="templates\sqlite.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="templates\entitydelegate_cpp.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="templates\entitydelegate_h.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="test\EntityInclude.h">
+      <Filter>Header Files\test</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

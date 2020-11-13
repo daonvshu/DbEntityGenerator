@@ -4,7 +4,7 @@
 
 #include "SqliteGenerator.h"
 
-bool Generator::generatorStart(const QString & xmlPath) {
+bool Generator::generatorStart(const QString & xmlPath, const QString& dbloaderPath) {
     
 	ConfigLoader loader(xmlPath);
 	if (!loader.load()) {
@@ -13,7 +13,7 @@ bool Generator::generatorStart(const QString & xmlPath) {
 
 	switch (loader.getSqlType()) {
 	case TYPE_SQLITE:
-		SqliteGenerator generator(loader.getCfgFilePath(), loader.getEntity<SqliteEntity>());
+		SqliteGenerator generator(loader.getCfgFilePath(), loader.getEntity<SqliteEntity>(), dbloaderPath);
 		generator.generate();
 		break;
 	}

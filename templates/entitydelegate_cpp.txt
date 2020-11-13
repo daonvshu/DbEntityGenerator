@@ -1,0 +1,11 @@
+#include "EntityInclude.h"
+$EntityHeaders$
+#include "$DbLoaderPath$DbLoader.h"
+namespace $SqlType$ {
+    void EntityDelegate::createEntityTables() {
+        DbLoader::getClient().createTables<$EntityList$>();
+    }
+
+    const int entityDelegateId = qRegisterMetaType<EntityDelegate*>();
+}
+

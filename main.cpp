@@ -8,16 +8,16 @@ int main(int argc, char *argv[])
 
 #ifndef QT_DEBUG
 	QStringList arguments = QCoreApplication::arguments();
-	if (arguments.size() < 2) {
+	if (arguments.size() < 3) {
 		qDebug() << "input argument!";
 		getchar();
 	} else {
-		if (!Generator::generatorStart(arguments.at(1))) {
+		if (!Generator::generatorStart(arguments.at(1), arguments.at(2))) {
 			getchar();
 		}
 	}
 #else
-	if (!Generator::generatorStart("test/sqlite_entity.xml")) {
+	if (!Generator::generatorStart("test/sqlite_entity.xml", "")) {
 		getchar();
 	}
 #endif // !DEBUG

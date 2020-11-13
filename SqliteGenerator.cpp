@@ -1,7 +1,7 @@
 #include "SqliteGenerator.h"
 
-SqliteGenerator::SqliteGenerator(QString outputPath, SqliteEntity entity)
-    : AbstractGenerator(outputPath)
+SqliteGenerator::SqliteGenerator(QString outputPath, SqliteEntity entity, QString dbloadPath)
+    : AbstractGenerator(outputPath, dbloadPath)
     , outputPath(outputPath)
     , entity(entity)
 {
@@ -9,8 +9,10 @@ SqliteGenerator::SqliteGenerator(QString outputPath, SqliteEntity entity)
 
 void SqliteGenerator::generate() {
     QString hppTemplate = loadTemplateFile(":/generator/templates/sqlite.txt");
+    QStringList tbnames;
     for (const auto& tb : entity.tables) {
         setCurrentTable(tb);
+        tbnames << tb.name;
         auto header = hppTemplate;
         //set classname
         header.replace("$ClassName$", tb.name);
@@ -38,6 +40,7 @@ void SqliteGenerator::generate() {
 
         writeTableHeaderByDiff(header, tb);
     }
+    generateEntityDelegate(tbnames);
 }
 
 QString SqliteGenerator::getFieldCppType(const QString& fieldType) {
@@ -101,4 +104,8 @@ QString SqliteGenerator::getComment(const QString& note) {
 
 QString SqliteGenerator::getAutoIncrementStatement() {
     return QString("autoincrement");
+}
+
+QString SqliteGenerator::getSqlNamespaceName() {
+    return "DaoSqlite";
 }

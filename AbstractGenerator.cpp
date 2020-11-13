@@ -4,13 +4,18 @@
 #include <qfile.h>
 #include <qregexp.h>
 
-AbstractGenerator::AbstractGenerator(QString outputPath) 
+AbstractGenerator::AbstractGenerator(QString outputPath, QString dbloadPath)
     : outputPath(outputPath)
+    , dbloadPath(dbloadPath)
 {
 }
 
 QString AbstractGenerator::getOutputFilePath(const Table& table) {
-    return QString("%1/%2.h").arg(outputPath).arg(table.name);
+    return getOutputFilePath(table.name + ".h");
+}
+
+QString AbstractGenerator::getOutputFilePath(const QString& fileName) {
+    return QString("%1/%2").arg(outputPath).arg(fileName);
 }
 
 QByteArray AbstractGenerator::getFileMd5(const QString& filePath) {
@@ -332,4 +337,40 @@ QString AbstractGenerator::createMetaType() {
         return QString("Q_DECLARE_METATYPE(%1);").arg(tb.name);
     }
     return QString();
+}
+
+void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
+    auto header = loadTemplateFile(":/generator/templates/entitydelegate_h.txt");
+    header.replace("$SqlType$", getSqlNamespaceName());
+    QString headerOutputFile = getOutputFilePath("EntityInclude.h");
+    {
+        QFile file(headerOutputFile);
+        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+        file.write(header.toLocal8Bit());
+        file.close();
+    }
+
+    auto cpp = loadTemplateFile(":/generator/templates/entitydelegate_cpp.txt");
+    cpp.replace("$SqlType$", getSqlNamespaceName());
+
+    QString entityHeaders;
+    QString entityListStr;
+    for (const auto& name : tbNames) {
+        entityHeaders.append(QString("#include \"%1.h\"\n").arg(name));
+        entityListStr.append(name).append(",");
+    }
+    cpp.replace("$EntityHeaders$", entityHeaders);
+    cpp.replace("$EntityList$", entityListStr.left(entityListStr.length() - 1));
+    if (!dbloadPath.isEmpty() && !dbloadPath.endsWith("/")) {
+        dbloadPath += "/";
+    }
+    cpp.replace("$DbLoaderPath$", dbloadPath);
+
+    QString cppOutputFile = getOutputFilePath("EntityInclude.cpp");
+    {
+        QFile file(cppOutputFile);
+        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+        file.write(cpp.toLocal8Bit());
+        file.close();
+    }
 }
