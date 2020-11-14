@@ -4,10 +4,13 @@
 #include <qfile.h>
 #include <qregexp.h>
 
-AbstractGenerator::AbstractGenerator(QString outputPath, QString dbloadPath)
+AbstractGenerator::AbstractGenerator(QString outputPath, QString loadPath)
     : outputPath(outputPath)
-    , dbloadPath(dbloadPath)
+    , dbloadPath(loadPath)
 {
+    if (!dbloadPath.isEmpty() && !dbloadPath.endsWith("/")) {
+        dbloadPath += "/";
+    }
 }
 
 QString AbstractGenerator::getOutputFilePath(const Table& table) {
@@ -211,6 +214,16 @@ QString AbstractGenerator::createConstructCommit() {
     TP_END;
 }
 
+QString AbstractGenerator::createFieldDeclare() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        ENTER;
+        TAB_2;
+        ADD(QString("EntityField %1 = \"%1\";").arg(field.name));
+    }
+    TP_END;
+}
+
 QString AbstractGenerator::createFieldSize() {
     return QString::number(currentFieldSize);
 }
@@ -376,9 +389,6 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
     }
     cpp.replace("$EntityHeaders$", entityHeaders);
     cpp.replace("$EntityList$", entityListStr.chopped(1));
-    if (!dbloadPath.isEmpty() && !dbloadPath.endsWith("/")) {
-        dbloadPath += "/";
-    }
     cpp.replace("$DbLoaderPath$", dbloadPath);
 
     QString cppOutputFile = getOutputFilePath("EntityInclude.cpp");

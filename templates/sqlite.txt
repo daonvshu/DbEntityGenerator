@@ -4,6 +4,8 @@
 #include <qobject.h>
 #include <qvariant.h>
 
+#include "$DbLoaderPath$condition/EntityField.h"
+
 class $ClassName$ {
 private:
 $Members$
@@ -17,6 +19,9 @@ $ConstructFields$
     { }
 
 public:
+    struct Fields {$FieldDeclare$
+    };
+
     struct Info {
         static int fieldSize() {
             return $FieldSize$;

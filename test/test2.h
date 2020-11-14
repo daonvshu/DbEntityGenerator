@@ -4,6 +4,8 @@
 #include <qobject.h>
 #include <qvariant.h>
 
+#include "$DbLoaderPath$condition/EntityField.h"
+
 class Test2 {
 private:
     //自增长主键
@@ -39,6 +41,15 @@ public:
     { }
 
 public:
+    struct Fields {
+        EntityField id("id");
+        EntityField name("name");
+        EntityField number("number");
+        EntityField number2("number2");
+        EntityField varianttype("varianttype");
+        EntityField nametmp("nametmp");
+    }
+
     struct Info {
         static int fieldSize() {
             return 5;

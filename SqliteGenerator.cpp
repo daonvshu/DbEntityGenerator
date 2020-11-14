@@ -14,6 +14,8 @@ void SqliteGenerator::generate() {
         setCurrentTable(tb);
         tbnames << tb.name;
         auto header = hppTemplate;
+        //set entity path
+        header.replace("$DbLoaderPath$", dbloadPath);
         //set classname
         header.replace("$ClassName$", tb.name);
         //set field list
@@ -22,6 +24,8 @@ void SqliteGenerator::generate() {
         header.replace("$FiedIdInit$", createDefaultConstruct());
         header.replace("$ConstructFields$", createConstructField());
         header.replace("$ConstructCommit$", createConstructCommit());
+        //set field declare
+        header.replace("$FieldDeclare$", createFieldDeclare());
         //set field size
         header.replace("$FieldSize$", createFieldSize());
         //set tablename

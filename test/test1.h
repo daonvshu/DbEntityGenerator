@@ -4,6 +4,8 @@
 #include <qobject.h>
 #include <qvariant.h>
 
+#include "$DbLoaderPath$condition/EntityField.h"
+
 class Test1 {
 private:
     //Ö÷¼ü
@@ -33,6 +35,13 @@ public:
     { }
 
 public:
+    struct Fields {
+        EntityField id("id");
+        EntityField name("name");
+        EntityField number("number");
+        EntityField hex("hex");
+    }
+
     struct Info {
         static int fieldSize() {
             return 4;
