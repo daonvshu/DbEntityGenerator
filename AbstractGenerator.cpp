@@ -217,9 +217,15 @@ QString AbstractGenerator::createConstructCommit() {
 QString AbstractGenerator::createFieldDeclare() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
         ENTER;
         TAB_2;
-        ADD(QString("EntityField %1 = \"%1\";").arg(field.name));
+        ADD(QString("EntityField<%1> %2 = \"%2\";")
+            .arg(getFieldCppType(field.type))
+            .arg(field.name)
+        );
     }
     TP_END;
 }
