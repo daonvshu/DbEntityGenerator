@@ -39,6 +39,8 @@ void SqliteGenerator::generate() {
         //set index
         header.replace("$FieldIndex$", createIndexFields());
         header.replace("$UniqueFieldIndex$", createIndexFields("unique index"));
+        //set check name autoincrement
+        header.replace("$CheckNameIncrement$", createCheckNameIncrement());
         //setter and getter
         header.replace("$MemberGetterSetter$", createSetterGetter());
         //set meta type

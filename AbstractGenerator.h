@@ -48,6 +48,7 @@ protected:
     QString createDatabaseType();
     QString createPrimaryKeys();
     QString createIndexFields(QString indexType = "index");
+    QString createCheckNameIncrement();
     QString createSetterGetter();
     QString createMetaType();
 

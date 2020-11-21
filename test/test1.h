@@ -4,7 +4,7 @@
 #include <qobject.h>
 #include <qvariant.h>
 
-#include "$DbLoaderPath$condition/EntityField.h"
+#include "condition/EntityField.h"
 
 class Test1 {
 private:
@@ -36,11 +36,11 @@ public:
 
 public:
     struct Fields {
-        EntityField id("id");
-        EntityField name("name");
-        EntityField number("number");
-        EntityField hex("hex");
-    }
+        EntityField<qint64> id = "id";
+        EntityField<QString> name = "name";
+        EntityField<qreal> number = "number";
+        EntityField<QByteArray> hex = "hex";
+    };
 
     struct Info {
         static int fieldSize() {
@@ -77,6 +77,10 @@ public:
 
         static QList<QStringList> getUniqueIndexFields() {
             return QList<QStringList>();
+        }
+
+        static bool isAutoIncrement(const QString& name) {
+            return false;
         }
     };
 

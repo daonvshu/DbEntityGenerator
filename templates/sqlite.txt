@@ -50,6 +50,10 @@ public:
         static QList<QStringList> getUniqueIndexFields() {
             return QList<QStringList>()$UniqueFieldIndex$;
         }
+
+        static bool isAutoIncrement(const QString& name) {
+            return $CheckNameIncrement$;
+        }
     };
 
 public:$MemberGetterSetter$

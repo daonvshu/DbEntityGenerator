@@ -321,6 +321,25 @@ QString AbstractGenerator::createIndexFields(QString indexType) {
     TP_END;
 }
 
+QString AbstractGenerator::createCheckNameIncrement() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.autoincreament) {
+            if (!str.isEmpty()) {
+                ENTER;
+                TAB_4;
+                TAB_2;
+                ADD("|| ");
+            }
+            ADD(QString("name == \"%1\"").arg(field.name));
+        }
+    }
+    if (str.isEmpty()) {
+        str = "false";
+    }
+    TP_END;
+}
+
 QString AbstractGenerator::createSetterGetter() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
