@@ -222,7 +222,7 @@ QString AbstractGenerator::createFieldDeclare() {
         }
         ENTER;
         TAB_2;
-        ADD(QString("EntityField<%1> %2 = \"%2\";")
+        ADD(QString("EntityField<%1> %2 = EntityField<%1>(\"%2\");")
             .arg(getFieldCppType(field.type))
             .arg(field.name)
         );
