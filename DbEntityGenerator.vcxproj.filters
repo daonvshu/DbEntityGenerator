@@ -97,4 +97,9 @@
       <Filter>Header Files\test</Filter>
     </QtMoc>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

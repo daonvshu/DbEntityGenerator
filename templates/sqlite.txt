@@ -35,6 +35,10 @@ public:
             return QStringList()$Fields$;
         }
 
+        static QStringList getFieldsWithoutAutoIncrement() {
+            return QStringList()$FieldsWithoutAuto$;
+        }
+
         static QStringList getFieldsType() {
             return QStringList() $FieldType$;
         }
@@ -53,6 +57,14 @@ public:
 
         static bool isAutoIncrement(const QString& name) {
             return $CheckNameIncrement$;
+        }
+
+        static QVariantList getValueWithoutAutoIncrement(const $ClassName$& entity) {
+            return QVariantList()$ValuesWithAuto$;
+        }
+
+        static void bindAutoIncrementId($ClassName$& entity, const QVariant& id) {
+            $BindAutoIncrementId$
         }
     };
 

@@ -32,6 +32,7 @@ void SqliteGenerator::generate() {
         header.replace("$TbName$", createTableName(entity.prefix));
         //set fields
         header.replace("$Fields$", createFields());
+        header.replace("$FieldsWithoutAuto$", createFieldsWithoutAutoIncrement());
         //set database type
         header.replace("$FieldType$", createDatabaseType());
         //set primary keys
@@ -41,6 +42,10 @@ void SqliteGenerator::generate() {
         header.replace("$UniqueFieldIndex$", createIndexFields("unique index"));
         //set check name autoincrement
         header.replace("$CheckNameIncrement$", createCheckNameIncrement());
+        //set bind id
+        header.replace("$BindAutoIncrementId$", createBindAutoIncrementId());
+        //set values getter
+        header.replace("$ValuesWithAuto$", createValuesGetWithoutAutoIncrement());
         //setter and getter
         header.replace("$MemberGetterSetter$", createSetterGetter());
         //set meta type

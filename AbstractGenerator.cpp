@@ -253,6 +253,24 @@ QString AbstractGenerator::createFields() {
     TP_END;
 }
 
+QString AbstractGenerator::createFieldsWithoutAutoIncrement() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        if (field.autoincreament) {
+            continue;
+        }
+        ENTER;
+        TAB_4;
+        ADD("<< \"");
+        ADD(field.name);
+        ADD("\"");
+    }
+    TP_END;
+}
+
 QString AbstractGenerator::createDatabaseType() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
@@ -324,6 +342,9 @@ QString AbstractGenerator::createIndexFields(QString indexType) {
 QString AbstractGenerator::createCheckNameIncrement() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
         if (field.autoincreament) {
             if (!str.isEmpty()) {
                 ENTER;
@@ -336,6 +357,41 @@ QString AbstractGenerator::createCheckNameIncrement() {
     }
     if (str.isEmpty()) {
         str = "false";
+    }
+    TP_END;
+}
+
+QString AbstractGenerator::createValuesGetWithoutAutoIncrement() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        if (field.autoincreament) {
+            continue;
+        }
+        ENTER;
+        TAB_4;
+        ADD("<< entity.");
+        ADD(field.name);
+    }
+    TP_END;
+}
+
+QString AbstractGenerator::createBindAutoIncrementId() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        if (field.autoincreament) {
+            ADD("entity.");
+            ADD(field.name);
+            ADD(" = id.value<");
+            ADD(getFieldCppType(field.type));
+            ADD(">();");
+            break;
+        }
     }
     TP_END;
 }

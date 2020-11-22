@@ -45,10 +45,13 @@ protected:
     QString createFieldSize();
     QString createTableName(const QString& prefix);
     QString createFields();
+    QString createFieldsWithoutAutoIncrement();
     QString createDatabaseType();
     QString createPrimaryKeys();
     QString createIndexFields(QString indexType = "index");
     QString createCheckNameIncrement();
+    QString createValuesGetWithoutAutoIncrement();
+    QString createBindAutoIncrementId();
     QString createSetterGetter();
     QString createMetaType();
 
