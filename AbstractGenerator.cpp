@@ -114,6 +114,7 @@ SPACE;\
 ADD(field.name)
 
 #define USE_LEFT(size)    str.chop(size)
+#define USE_RIGHT(size) str = str.mid(size)
 #define FIELD_INIT(field)   ADD(field + '(' + field + ')')
 
 QString AbstractGenerator::createFieldList() {
@@ -393,6 +394,31 @@ QString AbstractGenerator::createBindAutoIncrementId() {
             break;
         }
     }
+    TP_END;
+}
+
+QString AbstractGenerator::createBindValue() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        ADD(" else if (target == \"");
+        ADD(field.name);
+        ADD("\") {");
+        ENTER;
+        TAB_4;
+        ADD("entity.");
+        ADD(field.name);
+        ADD(" = value.value<");
+        ADD(getFieldCppType(field.type));
+        ADD(">();");
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("}");
+    }
+    USE_RIGHT(6);
     TP_END;
 }
 

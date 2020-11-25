@@ -58,13 +58,19 @@ public:
         static bool isAutoIncrement(const QString& name) {
             return $CheckNameIncrement$;
         }
+    };
 
+    struct Tool {
         static QVariantList getValueWithoutAutoIncrement(const $ClassName$& entity) {
             return QVariantList()$ValuesWithAuto$;
         }
 
         static void bindAutoIncrementId($ClassName$& entity, const QVariant& id) {
             $BindAutoIncrementId$
+        }
+
+        static void bindValue($ClassName$& entity, const QString& target, QVariant value) {
+            $BindValues$
         }
     };
 

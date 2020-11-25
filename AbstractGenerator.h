@@ -42,6 +42,7 @@ protected:
     QString createConstructField();
     QString createConstructCommit();
     QString createFieldDeclare();
+
     QString createFieldSize();
     QString createTableName(const QString& prefix);
     QString createFields();
@@ -50,8 +51,11 @@ protected:
     QString createPrimaryKeys();
     QString createIndexFields(QString indexType = "index");
     QString createCheckNameIncrement();
+
     QString createValuesGetWithoutAutoIncrement();
     QString createBindAutoIncrementId();
+    QString createBindValue();
+
     QString createSetterGetter();
     QString createMetaType();
 

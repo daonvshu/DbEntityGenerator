@@ -42,11 +42,11 @@ public:
 
 public:
     struct Fields {
-        EntityField<qint64> id = "id";
-        EntityField<QString> name = "name";
-        EntityField<int> number = "number";
-        EntityField<int> number2 = "number2";
-        EntityField<QVariant> varianttype = "varianttype";
+        EntityField<qint64> id = EntityField<qint64>("id");
+        EntityField<QString> name = EntityField<QString>("name");
+        EntityField<int> number = EntityField<int>("number");
+        EntityField<int> number2 = EntityField<int>("number2");
+        EntityField<QVariant> varianttype = EntityField<QVariant>("varianttype");
     };
 
     struct Info {
@@ -61,6 +61,14 @@ public:
         static QStringList getFields() {
             return QStringList()
                 << "id"
+                << "name"
+                << "number"
+                << "number2"
+                << "varianttype";
+        }
+
+        static QStringList getFieldsWithoutAutoIncrement() {
+            return QStringList()
                 << "name"
                 << "number"
                 << "number2"
@@ -93,6 +101,34 @@ public:
 
         static bool isAutoIncrement(const QString& name) {
             return name == "id";
+        }
+    };
+
+    struct Tool {
+        static QVariantList getValueWithoutAutoIncrement(const Test2& entity) {
+            return QVariantList()
+                << entity.name
+                << entity.number
+                << entity.number2
+                << entity.varianttype;
+        }
+
+        static void bindAutoIncrementId(Test2& entity, const QVariant& id) {
+            entity.id = id.value<qint64>();
+        }
+
+        static void bindValue(Test2& entity, const QString& target, QVariant value) {
+            if (target == "id") {
+                entity.id = value.value<qint64>();
+            } else if (target == "name") {
+                entity.name = value.value<QString>();
+            } else if (target == "number") {
+                entity.number = value.value<int>();
+            } else if (target == "number2") {
+                entity.number2 = value.value<int>();
+            } else if (target == "varianttype") {
+                entity.varianttype = value.value<QVariant>();
+            }
         }
     };
 

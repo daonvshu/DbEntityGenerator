@@ -44,6 +44,8 @@ void SqliteGenerator::generate() {
         header.replace("$CheckNameIncrement$", createCheckNameIncrement());
         //set bind id
         header.replace("$BindAutoIncrementId$", createBindAutoIncrementId());
+        //set bind value
+        header.replace("$BindValues$", createBindValue());
         //set values getter
         header.replace("$ValuesWithAuto$", createValuesGetWithoutAutoIncrement());
         //setter and getter

@@ -36,10 +36,10 @@ public:
 
 public:
     struct Fields {
-        EntityField<qint64> id = "id";
-        EntityField<QString> name = "name";
-        EntityField<qreal> number = "number";
-        EntityField<QByteArray> hex = "hex";
+        EntityField<qint64> id = EntityField<qint64>("id");
+        EntityField<QString> name = EntityField<QString>("name");
+        EntityField<qreal> number = EntityField<qreal>("number");
+        EntityField<QByteArray> hex = EntityField<QByteArray>("hex");
     };
 
     struct Info {
@@ -52,6 +52,14 @@ public:
         }
 
         static QStringList getFields() {
+            return QStringList()
+                << "id"
+                << "name"
+                << "number"
+                << "hex";
+        }
+
+        static QStringList getFieldsWithoutAutoIncrement() {
             return QStringList()
                 << "id"
                 << "name"
@@ -81,6 +89,32 @@ public:
 
         static bool isAutoIncrement(const QString& name) {
             return false;
+        }
+    };
+
+    struct Tool {
+        static QVariantList getValueWithoutAutoIncrement(const Test1& entity) {
+            return QVariantList()
+                << entity.id
+                << entity.name
+                << entity.number
+                << entity.hex;
+        }
+
+        static void bindAutoIncrementId(Test1& entity, const QVariant& id) {
+            
+        }
+
+        static void bindValue(Test1& entity, const QString& target, QVariant value) {
+            if (target == "id") {
+                entity.id = value.value<qint64>();
+            } else if (target == "name") {
+                entity.name = value.value<QString>();
+            } else if (target == "number") {
+                entity.number = value.value<qreal>();
+            } else if (target == "hex") {
+                entity.hex = value.value<QByteArray>();
+            }
         }
     };
 
