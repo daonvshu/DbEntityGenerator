@@ -418,6 +418,16 @@ QString AbstractGenerator::createBindValue() {
         TAB_2;
         ADD("}");
     }
+    if (!str.isEmpty()) {
+        ADD(" else {");
+        ENTER;
+        TAB_4;
+        ADD("entity.__putExtra(target, value);");
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("}");
+    }
     USE_RIGHT(6);
     TP_END;
 }
