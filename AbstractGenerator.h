@@ -53,6 +53,7 @@ protected:
     QString createCheckNameIncrement();
 
     QString createValuesGetWithoutAutoIncrement();
+    QString createGetValueByName();
     QString createBindAutoIncrementId();
     QString createBindValue();
 

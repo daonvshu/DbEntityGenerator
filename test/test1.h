@@ -103,6 +103,22 @@ public:
                 << entity.hex;
         }
 
+        static QVariant getValueByName(const Test1& entity, const QString& target) {
+            if (target == "id") {
+                return entity.id;
+            }
+            if (target == "name") {
+                return entity.name;
+            }
+            if (target == "number") {
+                return entity.number;
+            }
+            if (target == "hex") {
+                return entity.hex;
+            }
+            return entity.__extra.value(target);
+        }
+
         static void bindAutoIncrementId(Test1& entity, const QVariant& id) {
             
         }

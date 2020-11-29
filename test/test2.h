@@ -115,6 +115,28 @@ public:
                 << entity.varianttype;
         }
 
+        static QVariant getValueByName(const Test2& entity, const QString& target) {
+            if (target == "id") {
+                return entity.id;
+            }
+            if (target == "name") {
+                return entity.name;
+            }
+            if (target == "number") {
+                return entity.number;
+            }
+            if (target == "number2") {
+                return entity.number2;
+            }
+            if (target == "varianttype") {
+                return entity.varianttype;
+            }
+            if (target == "nametmp") {
+                return entity.nametmp;
+            }
+            return entity.__extra.value(target);
+        }
+
         static void bindAutoIncrementId(Test2& entity, const QVariant& id) {
             entity.id = id.value<qint64>();
         }

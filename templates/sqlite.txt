@@ -67,6 +67,10 @@ public:
             return QVariantList()$ValuesWithAuto$;
         }
 
+        static QVariant getValueByName(const $ClassName$& entity, const QString& target) {
+            $GetValueByName$
+        }
+
         static void bindAutoIncrementId($ClassName$& entity, const QVariant& id) {
             $BindAutoIncrementId$
         }

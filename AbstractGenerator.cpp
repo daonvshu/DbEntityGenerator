@@ -379,6 +379,29 @@ QString AbstractGenerator::createValuesGetWithoutAutoIncrement() {
     TP_END;
 }
 
+QString AbstractGenerator::createGetValueByName() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        ADD("if (target == \"");
+        ADD(field.name);
+        ADD("\") {");
+        ENTER;
+        TAB_4;
+        ADD("return entity.");
+        ADD(field.name);
+        ADD(";");
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("}");
+        ENTER;
+        TAB_1;
+        TAB_2;
+    }
+    ADD("return entity.__extra.value(target);");
+    TP_END;
+}
+
 QString AbstractGenerator::createBindAutoIncrementId() {
     TP_START;
     FIELD_FOREACH(tb.fields) {

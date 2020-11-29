@@ -48,6 +48,8 @@ void SqliteGenerator::generate() {
         header.replace("$BindValues$", createBindValue());
         //set values getter
         header.replace("$ValuesWithAuto$", createValuesGetWithoutAutoIncrement());
+        //set value getter
+        header.replace("$GetValueByName$", createGetValueByName());
         //setter and getter
         header.replace("$MemberGetterSetter$", createSetterGetter());
         //set meta type

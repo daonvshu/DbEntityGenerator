@@ -49,12 +49,12 @@
     <TargetName>$(ProjectName)_dev</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>msvc2017_64</QtInstall>
+    <QtInstall>msvc2017_x64</QtInstall>
     <QtModules>core;xml</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>msvc2017_64</QtInstall>
+    <QtInstall>msvc2017_x64</QtInstall>
     <QtModules>core;xml</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
