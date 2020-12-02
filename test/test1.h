@@ -38,10 +38,10 @@ public:
 
 public:
     struct Fields {
-        EntityField<qint64> id = EntityField<qint64>("id");
-        EntityField<QString> name = EntityField<QString>("name");
-        EntityField<qreal> number = EntityField<qreal>("number");
-        EntityField<QByteArray> hex = EntityField<QByteArray>("hex");
+        EntityField<qint64> id = EntityField<qint64>("id", "Test1");
+        EntityField<QString> name = EntityField<QString>("name", "Test1");
+        EntityField<qreal> number = EntityField<qreal>("number", "Test1");
+        EntityField<QByteArray> hex = EntityField<QByteArray>("hex", "Test1");
     };
 
     struct Info {
