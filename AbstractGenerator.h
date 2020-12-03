@@ -41,7 +41,7 @@ protected:
     QString createDefaultConstruct();
     QString createConstructField();
     QString createConstructCommit();
-    QString createFieldDeclare();
+    QString createFieldDeclare(const QString& prefix);
 
     QString createFieldSize();
     QString createTableName(const QString& prefix);

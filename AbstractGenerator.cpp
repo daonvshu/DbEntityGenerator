@@ -215,7 +215,7 @@ QString AbstractGenerator::createConstructCommit() {
     TP_END;
 }
 
-QString AbstractGenerator::createFieldDeclare() {
+QString AbstractGenerator::createFieldDeclare(const QString& prefix) {
     TP_START;
     FIELD_FOREACH(tb.fields) {
         if (field.transient) {
@@ -226,7 +226,7 @@ QString AbstractGenerator::createFieldDeclare() {
         ADD(QString("EntityField<%1> %2 = EntityField<%1>(\"%2\", \"%3\");")
             .arg(getFieldCppType(field.type))
             .arg(field.name)
-            .arg(tb.name)
+            .arg(createTableName(prefix))
         );
     }
     TP_END;

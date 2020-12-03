@@ -25,7 +25,7 @@ void SqliteGenerator::generate() {
         header.replace("$ConstructFields$", createConstructField());
         header.replace("$ConstructCommit$", createConstructCommit());
         //set field declare
-        header.replace("$FieldDeclare$", createFieldDeclare());
+        header.replace("$FieldDeclare$", createFieldDeclare(entity.prefix));
         //set field size
         header.replace("$FieldSize$", createFieldSize());
         //set tablename

@@ -44,11 +44,11 @@ public:
 
 public:
     struct Fields {
-        EntityField<qint64> id = EntityField<qint64>("id", "Test2");
-        EntityField<QString> name = EntityField<QString>("name", "Test2");
-        EntityField<int> number = EntityField<int>("number", "Test2");
-        EntityField<int> number2 = EntityField<int>("number2", "Test2");
-        EntityField<QVariant> varianttype = EntityField<QVariant>("varianttype", "Test2");
+        EntityField<qint64> id = EntityField<qint64>("id", "ts_test2");
+        EntityField<QString> name = EntityField<QString>("name", "ts_test2");
+        EntityField<int> number = EntityField<int>("number", "ts_test2");
+        EntityField<int> number2 = EntityField<int>("number2", "ts_test2");
+        EntityField<QVariant> varianttype = EntityField<QVariant>("varianttype", "ts_test2");
     };
 
     struct Info {
