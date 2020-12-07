@@ -232,6 +232,23 @@ QString AbstractGenerator::createFieldDeclare(const QString& prefix) {
     TP_END;
 }
 
+QString AbstractGenerator::createFieldDeclareReset() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD(QString("%1 = EntityField<%2>(\"%1\", tbName);")
+            .arg(field.name)
+            .arg(getFieldCppType(field.type))
+        );
+    }
+    TP_END;
+}
+
 QString AbstractGenerator::createFieldSize() {
     return QString::number(currentFieldSize);
 }

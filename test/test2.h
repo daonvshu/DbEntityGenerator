@@ -43,21 +43,38 @@ public:
     { }
 
 public:
-    struct Fields {
+    class Fields {
+    public:
         EntityField<qint64> id = EntityField<qint64>("id", "ts_test2");
         EntityField<QString> name = EntityField<QString>("name", "ts_test2");
         EntityField<int> number = EntityField<int>("number", "ts_test2");
         EntityField<int> number2 = EntityField<int>("number2", "ts_test2");
         EntityField<QVariant> varianttype = EntityField<QVariant>("varianttype", "ts_test2");
+    protected:
+        void reset(const QString& tbName) {
+            id = EntityField<qint64>("id", tbName);
+            name = EntityField<QString>("name", tbName);
+            number = EntityField<int>("number", tbName);
+            number2 = EntityField<int>("number2", tbName);
+            varianttype = EntityField<QVariant>("varianttype", tbName);
+        }
     };
 
     struct Info {
+        enum {
+            Attach = 1
+        };
+
         static int fieldSize() {
             return 5;
         }
 
         static QString getTableName() {
             return QStringLiteral("ts_test2");
+        }
+
+        static QString getSourceName() {
+            return getTableName();
         }
 
         static QStringList getFields() {
@@ -186,6 +203,6 @@ public:
     //set temp data
     inline void __putExtra(const QString& key, const QVariant& extra) {this->__extra.insert(key, extra);}
     //get function select result, like get "as" field result
-    inline QVariant __getExtra(const QString& key) {return __extra.value(key);}
+    inline QVariant __getExtra(const QString& key) const {return __extra.value(key);}
 };
 typedef QList<Test2> Test2List;

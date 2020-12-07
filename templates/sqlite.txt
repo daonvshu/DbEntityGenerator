@@ -21,16 +21,29 @@ $ConstructFields$
     { }
 
 public:
-    struct Fields {$FieldDeclare$
+    class Fields {
+    public:$FieldDeclare$
+
+    protected:
+        void reset(const QString& tbName) {$FieldDeclareReset$
+        }
     };
 
     struct Info {
+        enum {
+            Attach = 1
+        };
+
         static int fieldSize() {
             return $FieldSize$;
         }
 
         static QString getTableName() {
             return QStringLiteral("$TbName$");
+        }
+
+        static QString getSourceName() {
+            return getTableName();
         }
 
         static QStringList getFields() {

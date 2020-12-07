@@ -37,20 +37,36 @@ public:
     { }
 
 public:
-    struct Fields {
+    class Fields {
+    public:
         EntityField<qint64> id = EntityField<qint64>("id", "ts_test1");
         EntityField<QString> name = EntityField<QString>("name", "ts_test1");
         EntityField<qreal> number = EntityField<qreal>("number", "ts_test1");
         EntityField<QByteArray> hex = EntityField<QByteArray>("hex", "ts_test1");
+    protected:
+        void reset(const QString& tbName) {
+            id = EntityField<qint64>("id", tbName);
+            name = EntityField<QString>("name", tbName);
+            number = EntityField<qreal>("number", tbName);
+            hex = EntityField<QByteArray>("hex", tbName);
+        }
     };
 
     struct Info {
+        enum {
+            Attach = 1
+        };
+
         static int fieldSize() {
             return 4;
         }
 
         static QString getTableName() {
             return QStringLiteral("ts_test1");
+        }
+
+        static QString getSourceName() {
+            return getTableName();
         }
 
         static QStringList getFields() {
@@ -158,7 +174,7 @@ public:
     //set temp data
     inline void __putExtra(const QString& key, const QVariant& extra) {this->__extra.insert(key, extra);}
     //get function select result, like get "as" field result
-    inline QVariant __getExtra(const QString& key) {return __extra.value(key);}
+    inline QVariant __getExtra(const QString& key) const {return __extra.value(key);}
 };
 typedef QList<Test1> Test1List;
 Q_DECLARE_METATYPE(Test1);
