@@ -50,6 +50,7 @@ public:
         EntityField<int> number = EntityField<int>("number", "ts_test2");
         EntityField<int> number2 = EntityField<int>("number2", "ts_test2");
         EntityField<QVariant> varianttype = EntityField<QVariant>("varianttype", "ts_test2");
+
     protected:
         void reset(const QString& tbName) {
             id = EntityField<qint64>("id", tbName);

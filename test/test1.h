@@ -43,6 +43,7 @@ public:
         EntityField<QString> name = EntityField<QString>("name", "ts_test1");
         EntityField<qreal> number = EntityField<qreal>("number", "ts_test1");
         EntityField<QByteArray> hex = EntityField<QByteArray>("hex", "ts_test1");
+
     protected:
         void reset(const QString& tbName) {
             id = EntityField<qint64>("id", tbName);
