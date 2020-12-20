@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dao prefix="">
+  <tb name="Simplelib">
+    <item name="id" qtype="qint64" key="id">integer primary key autoincrement</item>
+    <item name="serid" qtype="qint64" note="服务器数据库id">integer</item>
+    <item name="type" qtype="int" note="区别单质还是混合 0单质 1混合" jfield="type0">integer</item>
+    <item name="zhname" qtype="QString" note="名称">text</item>
+    <item name="linkable" qtype="bool" note="表示是否可以连接  0表示不可以连接">integer</item>
+    <item name="nickname" qtype="QString" note="别名(俗名)">text</item>
+    <item name="cas" qtype="QString" note="CAS号">text</item>
+    <item name="formula" qtype="QString" note="分子式">text</item>
+    <item name="formulaWeight" qtype="QString" note="相对分子质量">text</item>
+    <item name="OxygenBalance" qtype="QString" note="氧平衡">text</item>
+    <item name="nitrogen" qtype="QString" note="含氮量">text</item>
+    <item name="relativeDensity" qtype="QString" note="相对密度">text</item>
+    <item name="meltingPoint" qtype="QString" note="熔点">text</item>
+    <item name="boilingPoint" qtype="QString" note="沸点">text</item>
+    <item name="flashPoint" qtype="QString" note="闪点">text</item>
+    <item name="decompTemp" qtype="QString" note="分解温度">text</item>
+    <item name="standardHeat" qtype="QString" note="标准生成热">text</item>
+    <item name="heatCapacity" qtype="QString" note="热容">text</item>
+    <item name="character" qtype="QString" note="性状">text</item>
+    <item name="wettability" qtype="QString" note="易湿性">text</item>
+    <item name="combustionheat" qtype="QString" note="燃烧热">text</item>
+    <item name="burstspeed" qtype="QString" note="爆速">text</item>
+    <item name="temp" qtype="QString" note="爆温">text</item>
+    <item name="bursthot" qtype="QString" note="爆热">text</item>
+    <item name="burstpress" qtype="QString" note="爆压">text</item>
+    <item name="burstvol" qtype="QString" note="爆容">text</item>
+    <item name="burstpoint" qtype="QString" note="5S爆发点">text</item>
+    <item name="frisen" qtype="QString" note="摩擦感度">text</item>
+    <item name="impsen" qtype="QString" note="撞击感度">text</item>
+    <item name="stasen" qtype="QString" note="静电感度">text</item>
+    <item name="explosionlimit" qtype="QString" note="爆炸极限">text</item>
+    <item name="svp" qtype="QString" note="蒸气压">text</item>
+    <item name="visible" qtype="bool" note="删除标志位 0不可见（已删除）">integer</item>
+    <item name="check" qtype="int" note="审核标志 0审核中 1未通过 2审核通过">integer</item>
+    <item name="version" qtype="int" note="数据版本号">integer</item>
+  </tb>
+</dao>
