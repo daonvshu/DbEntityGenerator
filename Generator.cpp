@@ -71,6 +71,7 @@ bool Generator::generatorStart(const QString & xmlPath) {
 			field.attr = fd.text();
 			field.note = fd.attribute("note");
             field.jsonField = fd.attribute("jfield", lowerAndSplitWithUnderline(field.name));
+			field.defaultValue = fd.attribute("default");
 
 			fieldList.append(field);
 		}
@@ -112,10 +113,8 @@ bool Generator::generatorStart(const QString & xmlPath) {
 		hpp.replace("$BindId$", getBindIdStr());
 		//bindvalue
 		hpp.replace("$BindValues$", getBindValueStr());
-		//id初始化
-		if (isIdInteger()) {
-			hpp.replace("$FiedIdInit$", getIdFieldName() + " = -1;");
-		}
+		//初始化
+		hpp.replace("$FiedIdInit$", getFieldInitStr());
 
 		QFile hppFile(filePathBase + "/" + tbName + ".h");
 
@@ -319,26 +318,6 @@ QString Generator::getIdType() {
 	return "int";
 }
 
-bool Generator::isIdInteger() {
-	for (const auto& field : fieldList) {
-		if (field.id) {
-			if (field.type == "long" || field.type == "qint64" || field.type == "int") {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-QString Generator::getIdFieldName() {
-	for (const auto& field : fieldList) {
-		if (field.id) {
-			return field.name;
-		}
-	}
-	return "";
-}
-
 QString Generator::getJson2EntityStr() {
     static QMap<QString, QString> castType;
     if (castType.isEmpty()) {
@@ -456,6 +435,30 @@ QString Generator::getBindValueStr() {
     bindStr.append(" else {\n            extraData.insert(field, data);\n        }");
 
 	return bindStr;
+}
+
+QString Generator::getFieldInitStr() {
+	QString member = "        %1 = %2;\n";
+	QString memberStr;
+
+	for (const auto& field : fieldList) {
+		if (field.defaultValue.isEmpty()) {
+			continue;
+		}
+		QString defaultValue;
+		if (field.type == "QString") {
+			defaultValue = '"' + field.defaultValue + '"';
+		} else if (field.type == "QByteArray") {
+			defaultValue = QString("QByteArray(\"%1\")").arg(field.defaultValue);
+		} else if (field.type == "QVariant") {
+			defaultValue = QString("QVariant(\"%1\")").arg(field.defaultValue);
+		} else {
+			defaultValue = field.defaultValue;
+		}
+		memberStr.append(member.arg(field.name,  defaultValue));
+	}
+
+	return memberStr;
 }
 
 QString Generator::upperFirstChar(const QString& s) {

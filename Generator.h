@@ -17,6 +17,7 @@ private:
 		QString attr;
 		QString note;
         QString jsonField;
+		QString defaultValue;
 	};
 
 	static QString getMembersStr();
@@ -29,14 +30,13 @@ private:
 	static QString getIndexStr();
 	static QString getIdField();
 	static QString getIdType();
-	static bool isIdInteger();
-	static QString getIdFieldName();
     static QString getJson2EntityStr();
     static QString getEntity2JsonStr();
 	static QString getReadEntityStr();
 	static QString getGetterSetterStr();
 	static QString getBindIdStr();
 	static QString getBindValueStr();
+	static QString getFieldInitStr();
 	
 	static QString upperFirstChar(const QString & s);
 	static QString lowerAndSplitWithUnderline(const QString& s);

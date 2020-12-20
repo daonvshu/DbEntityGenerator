@@ -16,8 +16,7 @@ $Members$
 
 public:
     $ClassName$() {
-        $FiedIdInit$
-    }
+$FiedIdInit$    }
     $ClassName$($ConstructFields$) {
     $ConstructCommit$}
 
