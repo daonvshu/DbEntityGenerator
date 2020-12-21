@@ -302,15 +302,6 @@ QString AbstractGenerator::createDatabaseType() {
         ADD(field.name);
         SPACE;
         ADD(getDatabaseFieldType(field.type));
-        if (!field.default.isEmpty()) {
-            SPACE;
-            ADD("default ");
-            if (checkFieldStrType(field.type)) {
-                ADD_s(field.default);
-            } else {
-                ADD(field.default);
-            }
-        }
         if (!field.constraint.isEmpty()) {
             if (field.constraint == "primary key" && currentPrimaryKeySize == 1) {
                 SPACE;
@@ -319,6 +310,23 @@ QString AbstractGenerator::createDatabaseType() {
                     SPACE;
                     ADD(getAutoIncrementStatement());
                 }
+            } else if (field.constraint == "not null") {
+                SPACE;
+                ADD(field.constraint);
+            } else if (field.constraint == "unique") {
+                SPACE;
+                ADD("not null");
+                SPACE;
+                ADD(field.constraint);
+            }
+        }
+        if (!field.default.isEmpty()) {
+            SPACE;
+            ADD("default ");
+            if (checkFieldStrType(field.type)) {
+                ADD_s(field.default);
+            } else {
+                ADD(field.default);
             }
         }
         ADD(getComment(field.note));
