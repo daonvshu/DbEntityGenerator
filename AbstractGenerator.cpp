@@ -320,7 +320,7 @@ QString AbstractGenerator::createDatabaseType() {
                 ADD(field.constraint);
             }
         }
-        if (!field.default.isEmpty()) {
+        if (!field.default.isEmpty() && !field.autoincreament) {
             SPACE;
             ADD("default ");
             if (checkFieldStrType(field.type)) {
