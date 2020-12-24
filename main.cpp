@@ -8,11 +8,11 @@ int main(int argc, char *argv[])
 
 #ifndef QT_DEBUG
 	QStringList arguments = QCoreApplication::arguments();
-	if (arguments.size() < 3) {
+	if (arguments.size() < 2) {
 		qDebug() << "input argument!";
 		getchar();
 	} else {
-		if (!Generator::generatorStart(arguments.at(1), arguments.at(2))) {
+		if (!Generator::generatorStart(arguments.at(1), arguments.size() == 2 ? QString() : arguments.at(2))) {
 			getchar();
 		}
 	}
