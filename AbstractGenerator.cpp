@@ -381,13 +381,20 @@ QString AbstractGenerator::createCheckNameIncrement() {
         }
     }
     if (str.isEmpty()) {
-        str = "false";
+        ADD("Q_UNUSED(name);");
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("return false");
+    } else {
+        str.prepend("return ");
     }
     TP_END;
 }
 
 QString AbstractGenerator::createValuesGetWithoutAutoIncrement() {
     TP_START;
+    bool set = false;
     FIELD_FOREACH(tb.fields) {
         if (field.transient) {
             continue;
@@ -399,6 +406,16 @@ QString AbstractGenerator::createValuesGetWithoutAutoIncrement() {
         TAB_4;
         ADD("<< entity.");
         ADD(field.name);
+        set = true;
+    }
+    if (set) {
+        str.prepend("return QVariantList()");
+    } else {
+        ADD("Q_UNUSED(entity);");
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("return QVariantList()");
     }
     TP_END;
 }
@@ -428,6 +445,7 @@ QString AbstractGenerator::createGetValueByName() {
 
 QString AbstractGenerator::createBindAutoIncrementId() {
     TP_START;
+    bool set = false;
     FIELD_FOREACH(tb.fields) {
         if (field.transient) {
             continue;
@@ -438,8 +456,16 @@ QString AbstractGenerator::createBindAutoIncrementId() {
             ADD(" = id.value<");
             ADD(getFieldCppType(field.type));
             ADD(">();");
+            set = true;
             break;
         }
+    }
+    if (!set) {
+        ADD("Q_UNUSED(entity);");
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("Q_UNUSED(id);");
     }
     TP_END;
 }

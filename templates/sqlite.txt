@@ -71,13 +71,13 @@ public:
         }
 
         static bool isAutoIncrement(const QString& name) {
-            return $CheckNameIncrement$;
+            $CheckNameIncrement$;
         }
     };
 
     struct Tool {
         static QVariantList getValueWithoutAutoIncrement(const $ClassName$& entity) {
-            return QVariantList()$ValuesWithAuto$;
+            $ValuesWithAuto$;
         }
 
         static QVariant getValueByName(const $ClassName$& entity, const QString& target) {
