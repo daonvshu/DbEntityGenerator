@@ -8,13 +8,13 @@
 
 class Test1 {
 private:
-    //Ö÷¼ü
+    //ä¸»é”®
     qint64 id;
-    //¸´ºÏÖ÷¼ü
+    //å¤åˆä¸»é”®
     QString name;
-    //¸¡µãÊı×Ö
+    //æµ®ç‚¹æ•°å­—
     qreal number;
-    //¶ş½øÖÆ
+    //äºŒè¿›åˆ¶
     QByteArray hex;
 
     QHash<QString, QVariant> __extra;
@@ -156,21 +156,21 @@ public:
     };
 
 public:
-    //set Ö÷¼ü
+    //set ä¸»é”®
     inline void setId(qint64 id) {this->id = id;}
-    //get Ö÷¼ü
+    //get ä¸»é”®
     inline qint64 getId() const {return id;}
-    //set ¸´ºÏÖ÷¼ü
+    //set å¤åˆä¸»é”®
     inline void setName(const QString& name) {this->name = name;}
-    //get ¸´ºÏÖ÷¼ü
+    //get å¤åˆä¸»é”®
     inline QString getName() const {return name;}
-    //set ¸¡µãÊı×Ö
+    //set æµ®ç‚¹æ•°å­—
     inline void setNumber(qreal number) {this->number = number;}
-    //get ¸¡µãÊı×Ö
+    //get æµ®ç‚¹æ•°å­—
     inline qreal getNumber() const {return number;}
-    //set ¶ş½øÖÆ
+    //set äºŒè¿›åˆ¶
     inline void setHex(const QByteArray& hex) {this->hex = hex;}
-    //get ¶ş½øÖÆ
+    //get äºŒè¿›åˆ¶
     inline QByteArray getHex() const {return hex;}
     //set temp data
     inline void __putExtra(const QString& key, const QVariant& extra) {this->__extra.insert(key, extra);}

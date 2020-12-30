@@ -3,6 +3,7 @@
 #include <qcryptographichash.h>
 #include <qfile.h>
 #include <qregexp.h>
+#include <qtextstream.h>
 
 AbstractGenerator::AbstractGenerator(QString outputPath, QString loadPath)
     : outputPath(outputPath)
@@ -74,10 +75,7 @@ void AbstractGenerator::writeTableHeaderByDiff(const QString& content, const Tab
     QString outputFile = getOutputFilePath(tb);
     auto oldHash = getFileMd5(outputFile);
     if (oldHash.compare(currentHash) != 0) {
-        QFile file(outputFile);
-        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-        file.write(content.toLocal8Bit());
-        file.close();
+        writeUtf8ContentWithBomHeader(outputFile, content);
     }
 }
 
@@ -537,12 +535,7 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
     auto header = loadTemplateFile(":/generator/templates/entitydelegate_h.txt");
     header.replace("$SqlType$", getSqlNamespaceName());
     QString headerOutputFile = getOutputFilePath("EntityInclude.h");
-    {
-        QFile file(headerOutputFile);
-        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-        file.write(header.toLocal8Bit());
-        file.close();
-    }
+    writeUtf8ContentWithBomHeader(headerOutputFile, header);
 
     auto cpp = loadTemplateFile(":/generator/templates/entitydelegate_cpp.txt");
     cpp.replace("$SqlType$", getSqlNamespaceName());
@@ -558,10 +551,16 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
     cpp.replace("$DbLoaderPath$", dbloadPath);
 
     QString cppOutputFile = getOutputFilePath("EntityInclude.cpp");
-    {
-        QFile file(cppOutputFile);
-        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-        file.write(cpp.toLocal8Bit());
-        file.close();
-    }
+    writeUtf8ContentWithBomHeader(cppOutputFile, cpp);
+}
+
+void AbstractGenerator::writeUtf8ContentWithBomHeader(const QString& path, const QString& content) {
+    QFile file(path);
+    file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+    QTextStream stream(&file);
+    stream.setCodec("utf-8");
+    stream.setGenerateByteOrderMark(true);
+    stream << content;
+    file.flush();
+    file.close();
 }

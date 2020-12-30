@@ -62,4 +62,6 @@ protected:
     QString createMetaType();
 
     void generateEntityDelegate(QStringList tbNames);
+
+    void writeUtf8ContentWithBomHeader(const QString& path, const QString& content);
 };
