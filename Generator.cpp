@@ -3,6 +3,7 @@
 #include "ConfigLoader.h"
 
 #include "SqliteGenerator.h"
+#include "MysqlGenerator.h"
 
 bool Generator::generatorStart(const QString & xmlPath, const QString& dbloaderPath) {
     
@@ -13,8 +14,10 @@ bool Generator::generatorStart(const QString & xmlPath, const QString& dbloaderP
 
 	switch (loader.getSqlType()) {
 	case TYPE_SQLITE:
-		SqliteGenerator generator(loader.getCfgFilePath(), loader.getEntity<SqliteEntity>(), dbloaderPath);
-		generator.generate();
+		SqliteGenerator(loader.getCfgFilePath(), loader.getEntity(), dbloaderPath).generate();
+		break;
+	case TYPE_MYSQL:
+		MysqlGenerator(loader.getCfgFilePath(), loader.getEntity(), dbloaderPath).generate();
 		break;
 	}
 

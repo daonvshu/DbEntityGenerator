@@ -46,6 +46,7 @@ protected:
 
     QString createFieldSize();
     QString createTableName(const QString& prefix);
+    QString createTableEngine(const QString& engine);
     QString createFields();
     QString createFieldsWithoutAutoIncrement();
     QString createDatabaseType();

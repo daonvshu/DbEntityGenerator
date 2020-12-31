@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dao prefix="ts_" db="mysql">
+  <tb name="MysqlTest1" engine="MyISAM" declaremetatype="true">
+    <item name="id" type="bigint" default="-1" constraints="primary key" note="主键"/>
+    <item name="name" type="text" constraints="primary key" default="text" note="复合主键"/>
+    <item name="number" type="double" note="浮点数字" default="10.0"/>
+    <item name="hex" type="blob" note="二进制"/>
+  </tb>
+  <tb name="MysqlTest2" engine="InnoDB">
+    <item name="id" type="bigint" default="-1" constraints="primary key" autoincrement="true" note="自增长主键"/>
+    <item name="name" type="text" constraints="not null"/>
+    <item name="number" type="int" default="0"/>
+    <item name="number2" type="int"/>
+    <item name="varianttype" type="variant" note="自定义类型"/>
+    <item name="nametmp" type="text" transient="true" note="临时类型" />
+    <index type="unique index">
+      <field seq="asc">name</field>
+      <field seq="desc">number</field>
+    </index>
+    <index>
+      <field>number2</field>
+    </index>
+    <index>
+      <field>number</field>
+      <field>number2</field>
+    </index>
+  </tb>
+  <tb name="MysqlTest3">
+    <item name="id" type="bigint" default="-1" constraints="primary key" autoincrement="true" />
+    <item name="tbi1" type="bigint" default="-1" note="绑定到MysqlTest1 id"/>
+    <item name="tbi2" type="bigint" default="-1" note="绑定到MysqlTest2 id"/>
+    <item name="name" type="text"/>
+    <item name="size" type="int"/>
+    <!--field type test-->
+    <item name="fTinyInt" type="tinyint" default="0" note="type tinyint"/>
+    <item name="fSmallInt" type="smallint" default="0" note="type small int"/>
+    <item name="fMediumInt" type="mediumint" default="0" note="type medium int"/>
+    <item name="fInt" type="int" bitsize="7" default="0" note="type int(7)"/>
+    <item name="fBigInt" type="bigint" default="0" note="type big int"/>
+    <item name="fFloat" type="float" default="0" note="type float"/>
+    <item name="fDouble" type="double" default="0" note="type double"/>
+    <item name="fDecimal" type="decimal" default="0" bitsize="6" decimal-d="4" note="type decimal(6,4)"/>
+
+    <item name="fDate" type="date" default="" note="type date"/>
+    <item name="fTime" type="time" default="" note="type time"/>
+    <item name="fDateTime" type="datetime" default="" note="type date time"/>
+    <item name="fTimestamp" type="timestamp" default="" note="type timestamp"/>
+
+    <item name="fChar" type="char" default="" note="type char"/>
+    <item name="fVarChar" type="varchar" default="" bitsize="12" note="type varchar(12)"/>
+    <item name="fTinyBlob" type="tinyblob" default="" note="type tiny blob"/>
+    <item name="fTinyText" type="tinytext" default="" note="type tiny text"/>
+    <item name="fBlob" type="blob" default="" note="type blob"/>
+    <item name="fText" type="text" default="" note="type text"/>
+    <item name="fMediumBlob" type="mediumblob" default="" note="type medium blob"/>
+    <item name="fMediumText" type="mediumtext" default="" note="type medium text"/>
+    <item name="fLongBlob" type="longblob" default="" note="type long blob" />
+    <item name="fLongText" type="longtext" default="" note="type long text"/>
+
+    <item name="fVariant" type="variant" default="" note="type variant"/>
+  </tb>
+</dao>

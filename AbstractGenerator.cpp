@@ -31,7 +31,7 @@ QByteArray AbstractGenerator::getFileMd5(const QString& filePath) {
         QByteArray data = file.readAll();
         file.close();
 
-        data = QString(data).replace(QRegExp("\\s"), "").toUtf8();
+        data = QString(data).toUtf8();
         if (!data.isEmpty()) {
             return QCryptographicHash::hash(data, QCryptographicHash::Md5);
         }
@@ -70,7 +70,7 @@ QString AbstractGenerator::upperFirstChar(const QString& s) {
 }
 
 void AbstractGenerator::writeTableHeaderByDiff(const QString& content, const Table& tb) {
-    auto hppCotent = QString(content).replace(QRegExp("\\s"), "").toUtf8();
+    auto hppCotent = QString(content).toUtf8();
     auto currentHash = QCryptographicHash::hash(hppCotent, QCryptographicHash::Md5);
     QString outputFile = getOutputFilePath(tb);
     auto oldHash = getFileMd5(outputFile);
@@ -79,21 +79,21 @@ void AbstractGenerator::writeTableHeaderByDiff(const QString& content, const Tab
     }
 }
 
-#define TP_START       QString str
-#define ADD(STR)        str.append(STR)
-#define ADD_S(STR)   ADD('"' + STR + '"')
-#define ADD_s(STR)   ADD('\'' + STR + '\'')
-#define TAB_1              ADD("    ")
-#define TAB_2             ADD("        ")
-#define TAB_4             ADD("                ")
-#define ENTER             ADD("\n")
-#define SPACE              ADD(" ")
-#define COMMENT_2   ADD("//")
-#define COMMENT_3   ADD("///")
-#define SEMICOLON   ADD(";")
-#define COMMA            ADD(",")
-#define EQUAL             ADD(" = ")
-#define TP_END           return str
+#define TP_START            QString str
+#define ADD(STR)            str.append(STR)
+#define ADD_S(STR)          ADD('"' + STR + '"')
+#define ADD_s(STR)          ADD('\'' + STR + '\'')
+#define TAB_1               ADD("    ")
+#define TAB_2               ADD("        ")
+#define TAB_4               ADD("                ")
+#define ENTER               ADD("\n")
+#define SPACE               ADD(" ")
+#define COMMENT_2           ADD("//")
+#define COMMENT_3           ADD("///")
+#define SEMICOLON           ADD(";")
+#define COMMA               ADD(",")
+#define EQUAL               ADD(" = ")
+#define TP_END              return str
 
 #define FIELD_FOREACH(fields)    for (const auto& field : fields)
 #define INDEX_FOREACH(indexes)    for (const auto& index : indexes)
@@ -185,6 +185,9 @@ QString AbstractGenerator::createConstructField() {
         if (field.transient) {
             continue;
         }
+        if (field.autoincreament) {
+            continue;
+        }
         TAB_2;
         DECLARE_CONST_FIELD;
         COMMA;
@@ -201,6 +204,9 @@ QString AbstractGenerator::createConstructCommit() {
     }
     FIELD_FOREACH(tb.fields) {
         if (field.transient) {
+            continue;
+        }
+        if (field.autoincreament) {
             continue;
         }
         FIELD_INIT(field.name);
@@ -255,6 +261,14 @@ QString AbstractGenerator::createTableName(const QString& prefix) {
     return prefix + tb.name.toLower();
 }
 
+QString AbstractGenerator::createTableEngine(const QString& engine) {
+    if (engine.isEmpty()) {
+        return "QString()";
+    } else {
+        return "\"" + engine + "\"";
+    }
+}
+
 QString AbstractGenerator::createFields() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
@@ -300,6 +314,17 @@ QString AbstractGenerator::createDatabaseType() {
         ADD(field.name);
         SPACE;
         ADD(getDatabaseFieldType(field.type));
+        if (field.bitsize != 0) {
+            if (field.type == "decimal" && field.decimal_d != 0) {
+                ADD(QString("(%1,%2)").arg(QString::number(field.bitsize), QString::number(field.decimal_d)));
+            } else {
+                ADD(QString("(%1)").arg(QString::number(field.bitsize)));
+            }
+        } else {
+            if (field.type == "decimal" && field.decimal_d != 0) {
+                ADD(QString("(0,%1)").arg(QString::number(field.decimal_d)));
+            }
+        }
         if (!field.constraint.isEmpty()) {
             if (field.constraint == "primary key" && currentPrimaryKeySize == 1) {
                 SPACE;

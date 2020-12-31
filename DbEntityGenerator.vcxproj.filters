@@ -47,6 +47,9 @@
     <ClCompile Include="test\EntityInclude.cpp">
       <Filter>Header Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="MysqlGenerator.cpp">
+      <Filter>Source Files\generator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generator.h">
@@ -70,6 +73,18 @@
     <ClInclude Include="test\test2.h">
       <Filter>Header Files\test</Filter>
     </ClInclude>
+    <ClInclude Include="MysqlGenerator.h">
+      <Filter>Header Files\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="test\MysqlTest1.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\MysqlTest2.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\MysqlTest3.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="Resource.qrc">
@@ -78,6 +93,9 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="test\sqlite_entity.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
+    <Xml Include="test\mysql_entity.xml">
       <Filter>Resource Files</Filter>
     </Xml>
   </ItemGroup>
@@ -89,6 +107,9 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="templates\entitydelegate_h.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="templates\mysql.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

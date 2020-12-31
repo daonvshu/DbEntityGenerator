@@ -11,6 +11,9 @@ struct Field {
 	QString default;
 	bool autoincreament;
 	bool transient;
+	//extra
+	int bitsize;
+	int decimal_d;
 };
 
 struct Index {
@@ -23,12 +26,11 @@ struct Table {
 	bool metatype; 
 	QList<Field> fields;
 	QList<Index> indexes;
+	//extra
+	QString engine;
 };
 
 struct Entity {
     QString prefix;
     QList<Table> tables;
-};
-
-struct SqliteEntity : public Entity {
 };

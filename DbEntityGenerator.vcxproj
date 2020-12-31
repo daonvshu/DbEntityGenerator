@@ -92,6 +92,7 @@
     <ClCompile Include="ConfigLoader.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MysqlGenerator.cpp" />
     <ClCompile Include="SqliteGenerator.cpp" />
     <ClCompile Include="test\EntityInclude.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -103,11 +104,21 @@
     <ClInclude Include="ConfigLoader.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Generator.h" />
+    <ClInclude Include="MysqlGenerator.h" />
     <ClInclude Include="SqliteGenerator.h" />
     <QtMoc Include="test\EntityInclude.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </QtMoc>
+    <ClInclude Include="test\MysqlTest1.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="test\MysqlTest2.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="test\MysqlTest3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="test\test1.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -121,11 +132,13 @@
     <QtRcc Include="Resource.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="test\mysql_entity.xml" />
     <Xml Include="test\sqlite_entity.xml" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="templates\entitydelegate_cpp.txt" />
     <Text Include="templates\entitydelegate_h.txt" />
+    <Text Include="templates\mysql.txt" />
     <Text Include="templates\sqlite.txt" />
   </ItemGroup>
   <ItemGroup>

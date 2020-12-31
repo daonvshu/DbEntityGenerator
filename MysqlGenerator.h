@@ -1,12 +1,12 @@
-#pragma once
+﻿#pragma once
 
 #include "Entity.h"
 
 #include "AbstractGenerator.h"
 
-class SqliteGenerator : public AbstractGenerator {
+class MysqlGenerator : public AbstractGenerator {
 public:
-    SqliteGenerator(QString outputPath, Entity entity, QString dbloadPath);
+    MysqlGenerator(QString outputPath, Entity entity, QString dbloadPath);
 
     void generate();
 

@@ -25,9 +25,8 @@ public:
         return cfgFilePath;
     }
 
-    template<typename T>
-    const T& getEntity() {
-        return *static_cast<T*>(data);
+    const Entity& getEntity() {
+        return *data;
     }
 
 private:

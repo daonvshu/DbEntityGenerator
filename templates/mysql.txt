@@ -3,6 +3,7 @@
 
 #include <qobject.h>
 #include <qvariant.h>
+#include <qdatetime.h>
 
 #include "$DbLoaderPath$condition/EntityField.h"
 
@@ -44,6 +45,10 @@ public:
 
         static QString getSourceName() {
             return getTableName();
+        }
+
+        static QString getTableEngine() {
+            return $TbEngine$;
         }
 
         static QStringList getFields() {

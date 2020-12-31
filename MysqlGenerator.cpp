@@ -1,13 +1,12 @@
-#include "SqliteGenerator.h"
+﻿#include "MysqlGenerator.h"
 
-SqliteGenerator::SqliteGenerator(QString outputPath, Entity entity, QString dbloadPath)
+MysqlGenerator::MysqlGenerator(QString outputPath, Entity entity, QString dbloadPath)
     : AbstractGenerator(outputPath, dbloadPath)
-    , entity(entity)
-{
+    , entity(entity) {
 }
 
-void SqliteGenerator::generate() {
-    QString hppTemplate = loadTemplateFile(":/generator/templates/sqlite.txt");
+void MysqlGenerator::generate() {
+    QString hppTemplate = loadTemplateFile(":/generator/templates/mysql.txt");
     QStringList tbnames;
     for (const auto& tb : entity.tables) {
         setCurrentTable(tb);
@@ -30,6 +29,8 @@ void SqliteGenerator::generate() {
         header.replace("$FieldSize$", createFieldSize());
         //set tablename
         header.replace("$TbName$", createTableName(entity.prefix));
+        //set engine
+        header.replace("$TbEngine$", createTableEngine(tb.engine));
         //set fields
         header.replace("$Fields$", createFields());
         header.replace("$FieldsWithoutAuto$", createFieldsWithoutAutoIncrement());
@@ -60,69 +61,84 @@ void SqliteGenerator::generate() {
     generateEntityDelegate(tbnames);
 }
 
-QString SqliteGenerator::getFieldCppType(const QString& fieldType) {
-    if (fieldType == "int") {
+QString MysqlGenerator::getFieldCppType(const QString& fieldType) {
+    if (fieldType == "tinyint") {
+        return "char";
+    }
+    if (fieldType == "smallint") {
+        return "short";
+    }
+    if (fieldType == "mediumint" || fieldType == "int") {
         return "int";
     }
-    if (fieldType == "long") {
+    if (fieldType == "bigint") {
         return "qint64";
     }
-    if (fieldType == "real") {
-        return "qreal";
+    if (fieldType == "float" || fieldType == "double" || fieldType == "decimal") {
+        return "double";
     }
-    if (fieldType == "text") {
+
+    if (fieldType == "date") {
+        return "QDate";
+    }
+    if (fieldType == "time") {
+        return "QString"; //see qsql_mysql.cpp#313
+    }
+    if (fieldType == "datetime" || fieldType == "timestamp") {
+        return "QDateTime";
+    }
+
+    if (fieldType == "char") {
+        return "QChar";
+    }
+    if (fieldType == "varchar" || fieldType == "tinytext" || fieldType == "text" ||
+        fieldType == "mediumtext" || fieldType == "longtext") {
         return "QString";
     }
-    if (fieldType == "blob") {
+    if (fieldType == "tinyblob" || fieldType == "blob" || fieldType == "mediumblob" ||
+        fieldType == "longblob") {
         return "QByteArray";
     }
+
     if (fieldType == "variant") {
         return "QVariant";
     }
+
     return QString("unknown");
 }
 
-bool SqliteGenerator::checkFieldStrType(const QString& fieldType) {
-    if (fieldType == "text") {
+bool MysqlGenerator::checkFieldStrType(const QString& fieldType) {
+    if (fieldType == "char" || fieldType == "time" || fieldType == "varchar" || fieldType == "tinytext" ||
+        fieldType == "text" || fieldType == "mediumtext" || fieldType == "longtext") {
         return true;
     }
     return false;
 }
 
-bool SqliteGenerator::checkFieldDecimalType(const QString& fieldType) {
-    if (fieldType == "int") {
+bool MysqlGenerator::checkFieldDecimalType(const QString& fieldType) {
+    if (fieldType == "tinyint" || fieldType == "smallint" || fieldType == "mediumint" || fieldType == "int" ||
+        fieldType == "bigint" || fieldType == "float" || fieldType == "double" || fieldType == "decimal") {
         return true;
     }
-    if (fieldType == "long") {
-        return true;
-    }
-    if (fieldType == "real") {
-        return true;
-    }
+    
     return false;
 }
 
-QString SqliteGenerator::getDatabaseFieldType(const QString& fieldType) {
-    if (fieldType == "int") {
-        return "integer";
-    }
-    if (fieldType == "long") {
-        return "integer";
-    }
+QString MysqlGenerator::getDatabaseFieldType(const QString& fieldType) {
     if (fieldType == "variant") {
         return "blob";
     }
     return fieldType;
 }
 
-QString SqliteGenerator::getComment(const QString& note) {
-    return QString();
+QString MysqlGenerator::getComment(const QString& note) {
+    return QString(" comment '%1'").arg(note);
 }
 
-QString SqliteGenerator::getAutoIncrementStatement() {
-    return QString("autoincrement");
+QString MysqlGenerator::getAutoIncrementStatement() {
+    return QString("auto_increment");
 }
 
-QString SqliteGenerator::getSqlNamespaceName() {
-    return "DaoSqlite";
+QString MysqlGenerator::getSqlNamespaceName() {
+    return "DaoMysql";
 }
