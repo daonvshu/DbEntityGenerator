@@ -12,13 +12,7 @@ $Members$
     QHash<QString, QVariant> __extra;
 
 public:
-    $ClassName$() {
-$FieldIdInit$    }
-
-    $ClassName$(
-$ConstructFields$
-    ) : $ConstructCommit$
-    { }
+    $Construct$
 
 public:
     class Fields {

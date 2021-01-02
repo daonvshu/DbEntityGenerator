@@ -25,17 +25,23 @@ public:
         id = -1;
         name = "text";
         number = 10.0;
+
     }
 
     MysqlTest1(
-        qint64 id,
+        const qint64& id,
         const QString& name,
-        double number,
+        const double& number,
         const QByteArray& hex
     ) : id(id)
     , name(name)
     , number(number)
     , hex(hex)
+    { }
+
+    MysqlTest1(
+        const QByteArray& hex
+    ) : hex(hex)
     { }
 
 public:
@@ -165,7 +171,7 @@ public:
 
 public:
     //set 主键
-    inline void setId(qint64 id) {this->id = id;}
+    inline void setId(const qint64& id) {this->id = id;}
     //get 主键
     inline qint64 getId() const {return id;}
     //set 复合主键
@@ -173,7 +179,7 @@ public:
     //get 复合主键
     inline QString getName() const {return name;}
     //set 浮点数字
-    inline void setNumber(double number) {this->number = number;}
+    inline void setNumber(const double& number) {this->number = number;}
     //get 浮点数字
     inline double getNumber() const {return number;}
     //set 二进制

@@ -25,8 +25,8 @@ protected:
     void writeTableHeaderByDiff(const QString& content, const Table& tb);
 
     virtual QString getFieldCppType(const QString& fieldType) = 0;
-    virtual bool checkFieldStrType(const QString& fieldType) = 0;
-    virtual bool checkFieldDecimalType(const QString& fieldType) = 0;
+    virtual QString getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) = 0;
+    virtual QString getDatabaseDefaultValueString(const QString& fieldType, const QString& defaultValue) = 0;
     virtual QString getDatabaseFieldType(const QString& fieldType) = 0;
     virtual QString getComment(const QString& note) = 0;
     virtual QString getAutoIncrementStatement() = 0;
@@ -38,9 +38,10 @@ protected:
     }
 
     QString createFieldList();
-    QString createDefaultConstruct();
-    QString createConstructField();
-    QString createConstructCommit();
+    QString createConstruct();
+    QString createDefaultFieldInit();
+    QString createConstructField(bool skipDefaultValue = false);
+    QString createConstructCommit(bool skipDefaultValue = false);
     QString createFieldDeclare(const QString& prefix);
     QString createFieldDeclareReset();
 

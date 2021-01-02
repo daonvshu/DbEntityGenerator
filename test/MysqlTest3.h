@@ -81,21 +81,36 @@ public:
         fFloat = 0;
         fDouble = 0;
         fDecimal = 0;
+        fDate = QDate();
+        fTime = "00:00:00";
+        fDateTime = QDateTime();
+        fTimestamp = QDateTime();
+        fChar = 'a';
+        fVarChar = "a";
+        fTinyBlob = "a";
+        fTinyText = "a";
+        fBlob = "a";
+        fText = "a";
+        fMediumBlob = "a";
+        fMediumText = "a";
+        fLongBlob = "a";
+        fLongText = "a";
+
     }
 
     MysqlTest3(
-        qint64 tbi1,
-        qint64 tbi2,
+        const qint64& tbi1,
+        const qint64& tbi2,
         const QString& name,
-        int size,
-        char fTinyInt,
-        short fSmallInt,
-        int fMediumInt,
-        int fInt,
-        qint64 fBigInt,
-        double fFloat,
-        double fDouble,
-        double fDecimal,
+        const int& size,
+        const char& fTinyInt,
+        const short& fSmallInt,
+        const int& fMediumInt,
+        const int& fInt,
+        const qint64& fBigInt,
+        const double& fFloat,
+        const double& fDouble,
+        const double& fDecimal,
         const QDate& fDate,
         const QString& fTime,
         const QDateTime& fDateTime,
@@ -137,6 +152,15 @@ public:
     , fMediumText(fMediumText)
     , fLongBlob(fLongBlob)
     , fLongText(fLongText)
+    , fVariant(fVariant)
+    { }
+
+    MysqlTest3(
+        const QString& name,
+        const int& size,
+        const QVariant& fVariant
+    ) : name(name)
+    , size(size)
     , fVariant(fVariant)
     { }
 
@@ -305,19 +329,19 @@ public:
                 << QStringLiteral("fDouble double default 0 comment 'type double'")
                 << QStringLiteral("fDecimal decimal(6,4) default 0 comment 'type decimal(6,4)'")
                 << QStringLiteral("fDate date comment 'type date'")
-                << QStringLiteral("fTime time comment 'type time'")
+                << QStringLiteral("fTime time default '00:00:00' comment 'type time'")
                 << QStringLiteral("fDateTime datetime comment 'type date time'")
                 << QStringLiteral("fTimestamp timestamp comment 'type timestamp'")
-                << QStringLiteral("fChar char comment 'type char'")
-                << QStringLiteral("fVarChar varchar(12) comment 'type varchar(12)'")
-                << QStringLiteral("fTinyBlob tinyblob comment 'type tiny blob'")
-                << QStringLiteral("fTinyText tinytext comment 'type tiny text'")
-                << QStringLiteral("fBlob blob comment 'type blob'")
-                << QStringLiteral("fText text comment 'type text'")
-                << QStringLiteral("fMediumBlob mediumblob comment 'type medium blob'")
-                << QStringLiteral("fMediumText mediumtext comment 'type medium text'")
-                << QStringLiteral("fLongBlob longblob comment 'type long blob'")
-                << QStringLiteral("fLongText longtext comment 'type long text'")
+                << QStringLiteral("fChar char default 'a' comment 'type char'")
+                << QStringLiteral("fVarChar varchar(12) default 'a' comment 'type varchar(12)'")
+                << QStringLiteral("fTinyBlob tinyblob default 'a' comment 'type tiny blob'")
+                << QStringLiteral("fTinyText tinytext default 'a' comment 'type tiny text'")
+                << QStringLiteral("fBlob blob default 'a' comment 'type blob'")
+                << QStringLiteral("fText text default 'a' comment 'type text'")
+                << QStringLiteral("fMediumBlob mediumblob default 'a' comment 'type medium blob'")
+                << QStringLiteral("fMediumText mediumtext default 'a' comment 'type medium text'")
+                << QStringLiteral("fLongBlob longblob default 'a' comment 'type long blob'")
+                << QStringLiteral("fLongText longtext default 'a' comment 'type long text'")
                 << QStringLiteral("fVariant blob comment 'type variant'");
         }
 
@@ -527,15 +551,15 @@ public:
 
 public:
     //
-    inline void setId(qint64 id) {this->id = id;}
+    inline void setId(const qint64& id) {this->id = id;}
     //
     inline qint64 getId() const {return id;}
     //set 绑定到MysqlTest1 id
-    inline void setTbi1(qint64 tbi1) {this->tbi1 = tbi1;}
+    inline void setTbi1(const qint64& tbi1) {this->tbi1 = tbi1;}
     //get 绑定到MysqlTest1 id
     inline qint64 getTbi1() const {return tbi1;}
     //set 绑定到MysqlTest2 id
-    inline void setTbi2(qint64 tbi2) {this->tbi2 = tbi2;}
+    inline void setTbi2(const qint64& tbi2) {this->tbi2 = tbi2;}
     //get 绑定到MysqlTest2 id
     inline qint64 getTbi2() const {return tbi2;}
     //
@@ -543,39 +567,39 @@ public:
     //
     inline QString getName() const {return name;}
     //
-    inline void setSize(int size) {this->size = size;}
+    inline void setSize(const int& size) {this->size = size;}
     //
     inline int getSize() const {return size;}
     //set type tinyint
-    inline void setFTinyInt(char fTinyInt) {this->fTinyInt = fTinyInt;}
+    inline void setFTinyInt(const char& fTinyInt) {this->fTinyInt = fTinyInt;}
     //get type tinyint
     inline char getFTinyInt() const {return fTinyInt;}
     //set type small int
-    inline void setFSmallInt(short fSmallInt) {this->fSmallInt = fSmallInt;}
+    inline void setFSmallInt(const short& fSmallInt) {this->fSmallInt = fSmallInt;}
     //get type small int
     inline short getFSmallInt() const {return fSmallInt;}
     //set type medium int
-    inline void setFMediumInt(int fMediumInt) {this->fMediumInt = fMediumInt;}
+    inline void setFMediumInt(const int& fMediumInt) {this->fMediumInt = fMediumInt;}
     //get type medium int
     inline int getFMediumInt() const {return fMediumInt;}
     //set type int(7)
-    inline void setFInt(int fInt) {this->fInt = fInt;}
+    inline void setFInt(const int& fInt) {this->fInt = fInt;}
     //get type int(7)
     inline int getFInt() const {return fInt;}
     //set type big int
-    inline void setFBigInt(qint64 fBigInt) {this->fBigInt = fBigInt;}
+    inline void setFBigInt(const qint64& fBigInt) {this->fBigInt = fBigInt;}
     //get type big int
     inline qint64 getFBigInt() const {return fBigInt;}
     //set type float
-    inline void setFFloat(double fFloat) {this->fFloat = fFloat;}
+    inline void setFFloat(const double& fFloat) {this->fFloat = fFloat;}
     //get type float
     inline double getFFloat() const {return fFloat;}
     //set type double
-    inline void setFDouble(double fDouble) {this->fDouble = fDouble;}
+    inline void setFDouble(const double& fDouble) {this->fDouble = fDouble;}
     //get type double
     inline double getFDouble() const {return fDouble;}
     //set type decimal(6,4)
-    inline void setFDecimal(double fDecimal) {this->fDecimal = fDecimal;}
+    inline void setFDecimal(const double& fDecimal) {this->fDecimal = fDecimal;}
     //get type decimal(6,4)
     inline double getFDecimal() const {return fDecimal;}
     //set type date

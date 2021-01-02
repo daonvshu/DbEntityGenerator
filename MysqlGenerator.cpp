@@ -19,9 +19,7 @@ void MysqlGenerator::generate() {
         //set field list
         header.replace("$Members$", createFieldList());
         //set construct
-        header.replace("$FieldIdInit$", createDefaultConstruct());
-        header.replace("$ConstructFields$", createConstructField());
-        header.replace("$ConstructCommit$", createConstructCommit());
+        header.replace("$Construct$", createConstruct());
         //set field declare
         header.replace("$FieldDeclare$", createFieldDeclare(entity.prefix));
         header.replace("$FieldDeclareReset$", createFieldDeclareReset());
@@ -107,21 +105,29 @@ QString MysqlGenerator::getFieldCppType(const QString& fieldType) {
     return QString("unknown");
 }
 
-bool MysqlGenerator::checkFieldStrType(const QString& fieldType) {
-    if (fieldType == "char" || fieldType == "time" || fieldType == "varchar" || fieldType == "tinytext" ||
-        fieldType == "text" || fieldType == "mediumtext" || fieldType == "longtext") {
-        return true;
-    }
-    return false;
-}
-
-bool MysqlGenerator::checkFieldDecimalType(const QString& fieldType) {
+QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) {
     if (fieldType == "tinyint" || fieldType == "smallint" || fieldType == "mediumint" || fieldType == "int" ||
         fieldType == "bigint" || fieldType == "float" || fieldType == "double" || fieldType == "decimal") {
-        return true;
+        return defaultValue;
     }
-    
-    return false;
+    if (fieldType == "date" || fieldType == "datetime" || fieldType == "timestamp") {
+        return defaultValue;
+    }
+    if (fieldType == "char") {
+        return QString("'%1'").arg(defaultValue);
+    }
+    return QString("\"%1\"").arg(defaultValue);
+}
+
+QString MysqlGenerator::getDatabaseDefaultValueString(const QString& fieldType, const QString& defaultValue) {
+    if (fieldType == "tinyint" || fieldType == "smallint" || fieldType == "mediumint" || fieldType == "int" ||
+        fieldType == "bigint" || fieldType == "float" || fieldType == "double" || fieldType == "decimal") {
+        return defaultValue;
+    }
+    if (fieldType == "date" || fieldType == "datetime" || fieldType == "timestamp") {
+        return QString();
+    }
+    return QString("'%1'").arg(defaultValue);
 }
 
 QString MysqlGenerator::getDatabaseFieldType(const QString& fieldType) {

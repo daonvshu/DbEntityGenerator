@@ -14,12 +14,12 @@ private:
     Entity entity;
 
 protected:
-    QString getFieldCppType(const QString& fieldType);
-    bool checkFieldStrType(const QString& fieldType);
-    bool checkFieldDecimalType(const QString& fieldType);
-    QString getDatabaseFieldType(const QString& fieldType);
-    QString getComment(const QString& note);
-    QString getAutoIncrementStatement();
+    QString getFieldCppType(const QString& fieldType) override;
+    QString getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) override;
+    QString getDatabaseDefaultValueString(const QString& fieldType, const QString& defaultValue) override;
+    QString getDatabaseFieldType(const QString& fieldType) override;
+    QString getComment(const QString& note) override;
+    QString getAutoIncrementStatement() override;
 
-    QString getSqlNamespaceName();
+    QString getSqlNamespaceName() override;
 };

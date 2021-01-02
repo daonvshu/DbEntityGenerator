@@ -20,9 +20,7 @@ void SqliteGenerator::generate() {
         //set field list
         header.replace("$Members$", createFieldList());
         //set construct
-        header.replace("$FieldIdInit$", createDefaultConstruct());
-        header.replace("$ConstructFields$", createConstructField());
-        header.replace("$ConstructCommit$", createConstructCommit());
+        header.replace("$Construct$", createConstruct());
         //set field declare
         header.replace("$FieldDeclare$", createFieldDeclare(entity.prefix));
         header.replace("$FieldDeclareReset$", createFieldDeclareReset());
@@ -82,24 +80,18 @@ QString SqliteGenerator::getFieldCppType(const QString& fieldType) {
     return QString("unknown");
 }
 
-bool SqliteGenerator::checkFieldStrType(const QString& fieldType) {
-    if (fieldType == "text") {
-        return true;
+QString SqliteGenerator::getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) {
+    if (fieldType == "int" || fieldType == "long" || fieldType == "real") {
+        return defaultValue;
     }
-    return false;
+    return QString("\"%1\"").arg(defaultValue);
 }
 
-bool SqliteGenerator::checkFieldDecimalType(const QString& fieldType) {
-    if (fieldType == "int") {
-        return true;
+QString SqliteGenerator::getDatabaseDefaultValueString(const QString& fieldType, const QString& defaultValue) {
+    if (fieldType == "int" || fieldType == "long" || fieldType == "real") {
+        return defaultValue;
     }
-    if (fieldType == "long") {
-        return true;
-    }
-    if (fieldType == "real") {
-        return true;
-    }
-    return false;
+    return QString("'%1'").arg(defaultValue);
 }
 
 QString SqliteGenerator::getDatabaseFieldType(const QString& fieldType) {

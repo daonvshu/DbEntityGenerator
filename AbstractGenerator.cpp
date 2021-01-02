@@ -103,11 +103,7 @@ SPACE;\
 ADD(field.name)
 
 #define DECLARE_CONST_FIELD   \
-if (checkFieldDecimalType(field.type)) {\
-ADD(getFieldCppType(field.type));\
-} else {\
 ADD("const " + getFieldCppType(field.type) + "&");\
-}\
 SPACE;\
 ADD(field.name)
 
@@ -156,19 +152,60 @@ QString AbstractGenerator::createFieldList() {
 
     TP_END;
 }
+/*
+$ClassName$() {
+    $FieldIdInit$
+}
 
-QString AbstractGenerator::createDefaultConstruct() {
+$ClassName$(
+    $ConstructFields$
+) : $ConstructCommit$
+{ }
+
+$ClassName$(
+    $ConstructFieldsWithoutDefault$
+) : $ConstructCommitWithoutDefault$
+{ }
+*/
+QString AbstractGenerator::createConstruct() {
+    TP_START;
+    //default construct
+    auto fieldInit = createDefaultFieldInit();
+    if (!fieldInit.isEmpty()) {
+        ADD(QString("$ClassName$() {\n%1\n    }").arg(fieldInit));
+    }
+
+    bool hasNotDefaultValue = false;
+    bool hasNotAutoIncrementField = false;
+    FIELD_FOREACH(tb.fields) {
+        if (field.default.isEmpty() && !field.autoincreament) {
+            hasNotDefaultValue = true;
+        }
+        if (!field.autoincreament) {
+            hasNotAutoIncrementField = true;
+        }
+    }
+
+    if (hasNotAutoIncrementField) {
+        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    { }").arg(createConstructField(), createConstructCommit()));
+    }
+
+    if (hasNotDefaultValue) {
+        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    { }").arg(createConstructField(true), createConstructCommit(true)));
+    }
+    str.replace("$ClassName$", tb.name);
+
+    TP_END;
+}
+
+QString AbstractGenerator::createDefaultFieldInit() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
         if (!field.default.isEmpty()) {
             TAB_2;
             ADD(field.name);
             EQUAL;
-            if (checkFieldStrType(field.type)) {
-                ADD_S(field.default);
-            } else {
-                ADD(field.default);
-            }
+            ADD(getCppDefaultValueString(field.type, field.default));
             SEMICOLON;
             ENTER;
         }
@@ -176,7 +213,7 @@ QString AbstractGenerator::createDefaultConstruct() {
     TP_END;
 }
 
-QString AbstractGenerator::createConstructField() {
+QString AbstractGenerator::createConstructField(bool skipDefaultValue) {
     TP_START;
     if (tb.fields.isEmpty()) {
         TP_END;
@@ -186,6 +223,9 @@ QString AbstractGenerator::createConstructField() {
             continue;
         }
         if (field.autoincreament) {
+            continue;
+        }
+        if (!field.default.isEmpty() && skipDefaultValue) {
             continue;
         }
         TAB_2;
@@ -197,7 +237,7 @@ QString AbstractGenerator::createConstructField() {
     TP_END;
 }
 
-QString AbstractGenerator::createConstructCommit() {
+QString AbstractGenerator::createConstructCommit(bool skipDefaultValue) {
     TP_START;
     if (tb.fields.isEmpty()) {
         TP_END;
@@ -207,6 +247,9 @@ QString AbstractGenerator::createConstructCommit() {
             continue;
         }
         if (field.autoincreament) {
+            continue;
+        }
+        if (!field.default.isEmpty() && skipDefaultValue) {
             continue;
         }
         FIELD_INIT(field.name);
@@ -344,12 +387,11 @@ QString AbstractGenerator::createDatabaseType() {
             }
         }
         if (!field.default.isEmpty() && !field.autoincreament) {
-            SPACE;
-            ADD("default ");
-            if (checkFieldStrType(field.type)) {
-                ADD_s(field.default);
-            } else {
-                ADD(field.default);
+            auto defaultStr = getDatabaseDefaultValueString(field.type, field.default);
+            if (!defaultStr.isEmpty()) {
+                SPACE;
+                ADD("default ");
+                ADD(defaultStr);
             }
         }
         ADD(getComment(field.note));
@@ -545,11 +587,8 @@ QString AbstractGenerator::createSetterGetter() {
         ADD("inline void set");
         ADD(upperFirstChar(field.name));
         ADD("(");
-        if (checkFieldDecimalType(field.type)) {
-            DECLARE_FIELD;
-        } else {
-            DECLARE_CONST_FIELD;
-        }
+        DECLARE_CONST_FIELD;
+        
         ADD(") {this->");
         ADD(field.name);
         EQUAL;
