@@ -22,4 +22,5 @@ protected:
     QString getAutoIncrementStatement() override;
 
     QString getSqlTypeName() override;
+    QString getSqlClientTypeName() override;
 };

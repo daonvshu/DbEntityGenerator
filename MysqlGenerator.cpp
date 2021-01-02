@@ -148,3 +148,7 @@ QString MysqlGenerator::getAutoIncrementStatement() {
 QString MysqlGenerator::getSqlTypeName() {
     return "Mysql";
 }
+
+QString MysqlGenerator::getSqlClientTypeName() {
+    return "ClientMysql";
+}

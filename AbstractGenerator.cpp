@@ -629,15 +629,16 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
 
     auto cpp = loadTemplateFile(":/generator/templates/entitydelegate_cpp.txt");
     cpp.replace("$SqlType$", getSqlTypeName());
+    cpp.replace("$SqlClientType$", getSqlClientTypeName());
 
     QString entityHeaders;
     QString entityListStr;
     for (const auto& name : tbNames) {
         entityHeaders.append(QString("#include \"%1.h\"\n").arg(name));
-        entityListStr.append(name).append(",");
+        entityListStr.append(name).append(", ");
     }
     cpp.replace("$EntityHeaders$", entityHeaders);
-    cpp.replace("$EntityList$", entityListStr.chopped(1));
+    cpp.replace("$EntityList$", entityListStr.chopped(2));
     cpp.replace("$DbLoaderPath$", dbloadPath);
 
     QString cppOutputFile = getOutputFilePath(QString("%1EntityInclude.cpp").arg(getSqlTypeName()));

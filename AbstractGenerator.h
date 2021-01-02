@@ -32,6 +32,7 @@ protected:
     virtual QString getAutoIncrementStatement() = 0;
 
     virtual QString getSqlTypeName() = 0;
+    virtual QString getSqlClientTypeName() = 0;
 
     void setCurrentTable(const Table& tb) {
         this->tb = tb;

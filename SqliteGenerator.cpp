@@ -118,3 +118,7 @@ QString SqliteGenerator::getAutoIncrementStatement() {
 QString SqliteGenerator::getSqlTypeName() {
     return "Sqlite";
 }
+
+QString SqliteGenerator::getSqlClientTypeName() {
+    return "ClientSqlite";
+}

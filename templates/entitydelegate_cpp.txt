@@ -3,11 +3,11 @@ $EntityHeaders$
 #include "$DbLoaderPath$DbLoader.h"
 namespace Dao$SqlType$ {
     void $SqlType$EntityDelegate::createEntityTables() {
-        DbLoader::getClient().createTables<$EntityList$>();
+        DbLoader::getClient().createTables<$SqlClientType$, $EntityList$>();
     }
 
     void $SqlType$EntityDelegate::entityTablesUpgrade() {
-        DbLoader::getClient().tablesUpgrade<$EntityList$>();
+        DbLoader::getClient().tablesUpgrade<$SqlClientType$, $EntityList$>();
     }
 
     const int entity$SqlType$DelegateId = qRegisterMetaType<$SqlType$EntityDelegate*>();
