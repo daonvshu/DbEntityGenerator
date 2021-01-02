@@ -25,7 +25,6 @@ public:
         id = -1;
         name = "text";
         number = 10.0;
-
     }
 
     MysqlTest1(

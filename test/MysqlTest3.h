@@ -95,7 +95,6 @@ public:
         fMediumText = "a";
         fLongBlob = "a";
         fLongText = "a";
-
     }
 
     MysqlTest3(

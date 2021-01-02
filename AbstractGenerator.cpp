@@ -172,7 +172,7 @@ QString AbstractGenerator::createConstruct() {
     //default construct
     auto fieldInit = createDefaultFieldInit();
     if (!fieldInit.isEmpty()) {
-        ADD(QString("$ClassName$() {\n%1\n    }").arg(fieldInit));
+        ADD(QString("$ClassName$() {\n%1    }").arg(fieldInit));
     }
 
     bool hasNotDefaultValue = false;

@@ -29,7 +29,6 @@ public:
     MysqlTest2() {
         id = -1;
         number = 0;
-
     }
 
     MysqlTest2(
