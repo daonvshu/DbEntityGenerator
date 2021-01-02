@@ -623,12 +623,12 @@ QString AbstractGenerator::createMetaType() {
 
 void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
     auto header = loadTemplateFile(":/generator/templates/entitydelegate_h.txt");
-    header.replace("$SqlType$", getSqlNamespaceName());
-    QString headerOutputFile = getOutputFilePath("EntityInclude.h");
+    header.replace("$SqlType$", getSqlTypeName());
+    QString headerOutputFile = getOutputFilePath(QString("%1EntityInclude.h").arg(getSqlTypeName()));
     writeUtf8ContentWithBomHeader(headerOutputFile, header);
 
     auto cpp = loadTemplateFile(":/generator/templates/entitydelegate_cpp.txt");
-    cpp.replace("$SqlType$", getSqlNamespaceName());
+    cpp.replace("$SqlType$", getSqlTypeName());
 
     QString entityHeaders;
     QString entityListStr;
@@ -640,7 +640,7 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
     cpp.replace("$EntityList$", entityListStr.chopped(1));
     cpp.replace("$DbLoaderPath$", dbloadPath);
 
-    QString cppOutputFile = getOutputFilePath("EntityInclude.cpp");
+    QString cppOutputFile = getOutputFilePath(QString("%1EntityInclude.cpp").arg(getSqlTypeName()));
     writeUtf8ContentWithBomHeader(cppOutputFile, cpp);
 }
 

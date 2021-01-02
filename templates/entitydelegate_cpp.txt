@@ -1,15 +1,15 @@
-#include "EntityInclude.h"
+#include "$SqlType$EntityInclude.h"
 $EntityHeaders$
 #include "$DbLoaderPath$DbLoader.h"
-namespace $SqlType$ {
-    void EntityDelegate::createEntityTables() {
+namespace Dao$SqlType$ {
+    void $SqlType$EntityDelegate::createEntityTables() {
         DbLoader::getClient().createTables<$EntityList$>();
     }
 
-    void EntityDelegate::entityTablesUpgrade() {
+    void $SqlType$EntityDelegate::entityTablesUpgrade() {
         DbLoader::getClient().tablesUpgrade<$EntityList$>();
     }
 
-    const int entityDelegateId = qRegisterMetaType<EntityDelegate*>();
+    const int entity$SqlType$DelegateId = qRegisterMetaType<$SqlType$EntityDelegate*>();
 }
 

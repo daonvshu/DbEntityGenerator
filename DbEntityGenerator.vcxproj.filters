@@ -44,11 +44,11 @@
     <ClCompile Include="AbstractGenerator.cpp">
       <Filter>Source Files\generator</Filter>
     </ClCompile>
-    <ClCompile Include="test\EntityInclude.cpp">
-      <Filter>Header Files\test</Filter>
-    </ClCompile>
     <ClCompile Include="MysqlGenerator.cpp">
       <Filter>Source Files\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="test\MysqlEntityInclude.cpp">
+      <Filter>Header Files\test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,13 +114,13 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="test\EntityInclude.h">
-      <Filter>Header Files\test</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="README.md">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="test\MysqlEntityInclude.h">
+      <Filter>Header Files\test</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

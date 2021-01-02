@@ -21,5 +21,5 @@ protected:
     QString getComment(const QString& note) override;
     QString getAutoIncrementStatement() override;
 
-    QString getSqlNamespaceName() override;
+    QString getSqlTypeName() override;
 };

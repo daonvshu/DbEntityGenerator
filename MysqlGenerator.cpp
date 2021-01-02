@@ -145,6 +145,6 @@ QString MysqlGenerator::getAutoIncrementStatement() {
     return QString("auto_increment");
 }
 
-QString MysqlGenerator::getSqlNamespaceName() {
-    return "DaoMysql";
+QString MysqlGenerator::getSqlTypeName() {
+    return "Mysql";
 }

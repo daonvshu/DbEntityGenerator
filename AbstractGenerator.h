@@ -31,7 +31,7 @@ protected:
     virtual QString getComment(const QString& note) = 0;
     virtual QString getAutoIncrementStatement() = 0;
 
-    virtual QString getSqlNamespaceName() = 0;
+    virtual QString getSqlTypeName() = 0;
 
     void setCurrentTable(const Table& tb) {
         this->tb = tb;

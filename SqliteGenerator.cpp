@@ -115,6 +115,6 @@ QString SqliteGenerator::getAutoIncrementStatement() {
     return QString("autoincrement");
 }
 
-QString SqliteGenerator::getSqlNamespaceName() {
-    return "DaoSqlite";
+QString SqliteGenerator::getSqlTypeName() {
+    return "Sqlite";
 }
