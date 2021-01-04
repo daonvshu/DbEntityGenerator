@@ -98,10 +98,6 @@ QString MysqlGenerator::getFieldCppType(const QString& fieldType) {
         return "QByteArray";
     }
 
-    if (fieldType == "variant") {
-        return "QVariant";
-    }
-
     return QString("unknown");
 }
 
@@ -134,9 +130,6 @@ QString MysqlGenerator::getDatabaseDefaultValueString(const QString& fieldType, 
 }
 
 QString MysqlGenerator::getDatabaseFieldType(const QString& fieldType) {
-    if (fieldType == "variant") {
-        return "blob";
-    }
     return fieldType;
 }
 
