@@ -127,7 +127,10 @@ QString MysqlGenerator::getDatabaseDefaultValueString(const QString& fieldType, 
     if (fieldType == "date" || fieldType == "datetime" || fieldType == "timestamp") {
         return QString();
     }
-    return QString("'%1'").arg(defaultValue);
+    if (fieldType == "char" || fieldType == "varchar") {
+        return QString("'%1'").arg(defaultValue);
+    }
+    return QString();
 }
 
 QString MysqlGenerator::getDatabaseFieldType(const QString& fieldType) {
