@@ -490,6 +490,9 @@ QString AbstractGenerator::createValuesGetWithoutAutoIncrement() {
 QString AbstractGenerator::createGetValueByName() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
         ADD("if (target == \"");
         ADD(field.name);
         ADD("\") {");
