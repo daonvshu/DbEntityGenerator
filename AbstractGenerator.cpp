@@ -193,6 +193,13 @@ QString AbstractGenerator::createConstruct() {
     if (hasNotDefaultValue) {
         ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    { }").arg(createConstructField(true), createConstructCommit(true)));
     }
+
+    for (const auto& customConstructor : tb.customConstructor) {
+        if (!customConstructor.isEmpty()) {
+            ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    { }").arg(createConstructField(true, customConstructor), createConstructCommit(true, customConstructor)));
+        }
+    }
+
     str.replace("$ClassName$", tb.name);
 
     TP_END;
@@ -213,20 +220,26 @@ QString AbstractGenerator::createDefaultFieldInit() {
     TP_END;
 }
 
-QString AbstractGenerator::createConstructField(bool skipDefaultValue) {
+QString AbstractGenerator::createConstructField(bool skipDefaultValue, const QStringList& enforceFields) {
     TP_START;
     if (tb.fields.isEmpty()) {
         TP_END;
     }
     FIELD_FOREACH(tb.fields) {
-        if (field.transient) {
-            continue;
-        }
-        if (field.autoincreament) {
-            continue;
-        }
-        if (!field.default.isEmpty() && skipDefaultValue) {
-            continue;
+        if (enforceFields.isEmpty()) {
+            if (field.transient) {
+                continue;
+            }
+            if (field.autoincreament) {
+                continue;
+            }
+            if (!field.default.isEmpty() && skipDefaultValue) {
+                continue;
+            }
+        } else {
+            if (!enforceFields.contains(field.name)) {
+                continue;
+            }
         }
         TAB_2;
         DECLARE_CONST_FIELD;
@@ -237,20 +250,26 @@ QString AbstractGenerator::createConstructField(bool skipDefaultValue) {
     TP_END;
 }
 
-QString AbstractGenerator::createConstructCommit(bool skipDefaultValue) {
+QString AbstractGenerator::createConstructCommit(bool skipDefaultValue, const QStringList& enforceFields) {
     TP_START;
     if (tb.fields.isEmpty()) {
         TP_END;
     }
     FIELD_FOREACH(tb.fields) {
-        if (field.transient) {
-            continue;
-        }
-        if (field.autoincreament) {
-            continue;
-        }
-        if (!field.default.isEmpty() && skipDefaultValue) {
-            continue;
+        if (enforceFields.isEmpty()) {
+            if (field.transient) {
+                continue;
+            }
+            if (field.autoincreament) {
+                continue;
+            }
+            if (!field.default.isEmpty() && skipDefaultValue) {
+                continue;
+            }
+        } else {
+            if (!enforceFields.contains(field.name)) {
+                continue;
+            }
         }
         FIELD_INIT(field.name);
         ENTER;

@@ -26,6 +26,7 @@ struct Table {
 	bool metatype; 
 	QList<Field> fields;
 	QList<Index> indexes;
+	QList<QStringList> customConstructor;
 	//extra
 	QString engine;
 };

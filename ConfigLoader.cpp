@@ -99,6 +99,14 @@ bool ConfigLoader::load() {
 					}
 				}
 				tableData.indexes << index;
+			} else if (itemNode.nodeName() == "constructor") {
+				QStringList fields;
+				auto fieldNodes = itemNode.childNodes();
+				for (int k = 0; k < fieldNodes.size(); k++) {
+					auto ele = fieldNodes.at(k).toElement();
+					fields << ele.text();
+				}
+				tableData.customConstructor << fields;
 			}
 		}
 		data->tables << tableData;

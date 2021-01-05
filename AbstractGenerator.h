@@ -41,8 +41,8 @@ protected:
     QString createFieldList();
     QString createConstruct();
     QString createDefaultFieldInit();
-    QString createConstructField(bool skipDefaultValue = false);
-    QString createConstructCommit(bool skipDefaultValue = false);
+    QString createConstructField(bool skipDefaultValue = false, const QStringList& enforceFields = QStringList());
+    QString createConstructCommit(bool skipDefaultValue = false, const QStringList& enforceFields = QStringList());
     QString createFieldDeclare(const QString& prefix);
     QString createFieldDeclareReset();
 
