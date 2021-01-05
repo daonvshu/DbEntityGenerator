@@ -187,16 +187,23 @@ QString AbstractGenerator::createConstruct() {
     }
 
     if (hasNotAutoIncrementField) {
-        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    { }").arg(createConstructField(), createConstructCommit()));
+        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+            .arg(createConstructField(), createConstructCommit(), createDefaultFieldInit(true)));
     }
 
     if (hasNotDefaultValue) {
-        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    { }").arg(createConstructField(true), createConstructCommit(true)));
+        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+            .arg(createConstructField(true), createConstructCommit(true), fieldInit));
     }
 
     for (const auto& customConstructor : tb.customConstructor) {
         if (!customConstructor.isEmpty()) {
-            ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    { }").arg(createConstructField(true, customConstructor), createConstructCommit(true, customConstructor)));
+            ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+                .arg(
+                    createConstructField(true, customConstructor),
+                    createConstructCommit(true, customConstructor),
+                    createDefaultFieldInit(false, customConstructor)
+                ));
         }
     }
 
@@ -205,17 +212,26 @@ QString AbstractGenerator::createConstruct() {
     TP_END;
 }
 
-QString AbstractGenerator::createDefaultFieldInit() {
+QString AbstractGenerator::createDefaultFieldInit(bool onlyAutoIncrement, const QStringList& excludeFieldsWithDefault) {
     TP_START;
     FIELD_FOREACH(tb.fields) {
-        if (!field.default.isEmpty()) {
-            TAB_2;
-            ADD(field.name);
-            EQUAL;
-            ADD(getCppDefaultValueString(field.type, field.default));
-            SEMICOLON;
-            ENTER;
+        if (field.default.isEmpty()) {
+            continue;
         }
+        if (onlyAutoIncrement && !field.autoincreament) {
+            continue;
+        }
+        if (!excludeFieldsWithDefault.isEmpty()) {
+            if (excludeFieldsWithDefault.contains(field.name)) {
+                continue;
+            }
+        }
+        TAB_2;
+        ADD(field.name);
+        EQUAL;
+        ADD(getCppDefaultValueString(field.type, field.default));
+        SEMICOLON;
+        ENTER;
     }
     TP_END;
 }

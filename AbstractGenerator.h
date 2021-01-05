@@ -40,7 +40,7 @@ protected:
 
     QString createFieldList();
     QString createConstruct();
-    QString createDefaultFieldInit();
+    QString createDefaultFieldInit(bool onlyAutoIncrement = false, const QStringList& excludeFieldsWithDefault = QStringList());
     QString createConstructField(bool skipDefaultValue = false, const QStringList& enforceFields = QStringList());
     QString createConstructCommit(bool skipDefaultValue = false, const QStringList& enforceFields = QStringList());
     QString createFieldDeclare(const QString& prefix);

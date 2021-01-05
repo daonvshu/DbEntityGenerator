@@ -36,12 +36,17 @@ public:
     , name(name)
     , number(number)
     , hex(hex)
-    { }
+    {
+    }
 
     MysqlTest1(
         const QByteArray& hex
     ) : hex(hex)
-    { }
+    {
+        id = -1;
+        name = "text";
+        number = 10.0;
+    }
 
 public:
     class Fields {
@@ -100,7 +105,7 @@ public:
         static QStringList getFieldsType() {
             return QStringList() 
                 << QStringLiteral("id bigint default -1 comment '主键'")
-                << QStringLiteral("name text default 'text' comment '复合主键'")
+                << QStringLiteral("name varchar(100) default 'text' comment '复合主键'")
                 << QStringLiteral("number double default 10.0 comment '浮点数字'")
                 << QStringLiteral("hex blob comment '二进制'");
         }

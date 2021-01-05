@@ -63,8 +63,6 @@ private:
     QByteArray fLongBlob;
     //type long text
     QString fLongText;
-    //type variant
-    QVariant fVariant;
 
     QHash<QString, QVariant> __extra;
 
@@ -123,8 +121,7 @@ public:
         const QByteArray& fMediumBlob,
         const QString& fMediumText,
         const QByteArray& fLongBlob,
-        const QString& fLongText,
-        const QVariant& fVariant
+        const QString& fLongText
     ) : tbi1(tbi1)
     , tbi2(tbi2)
     , name(name)
@@ -151,17 +148,77 @@ public:
     , fMediumText(fMediumText)
     , fLongBlob(fLongBlob)
     , fLongText(fLongText)
-    , fVariant(fVariant)
-    { }
+    {
+        id = -1;
+    }
 
     MysqlTest3(
         const QString& name,
-        const int& size,
-        const QVariant& fVariant
+        const int& size
     ) : name(name)
     , size(size)
-    , fVariant(fVariant)
-    { }
+    {
+        id = -1;
+        tbi1 = -1;
+        tbi2 = -1;
+        fTinyInt = 0;
+        fSmallInt = 0;
+        fMediumInt = 0;
+        fInt = 0;
+        fBigInt = 0;
+        fFloat = 0;
+        fDouble = 0;
+        fDecimal = 0;
+        fDate = QDate();
+        fTime = "00:00:00";
+        fDateTime = QDateTime();
+        fTimestamp = QDateTime();
+        fChar = 'a';
+        fVarChar = "a";
+        fTinyBlob = "a";
+        fTinyText = "a";
+        fBlob = "a";
+        fText = "a";
+        fMediumBlob = "a";
+        fMediumText = "a";
+        fLongBlob = "a";
+        fLongText = "a";
+    }
+
+    MysqlTest3(
+        const qint64& tbi1,
+        const qint64& tbi2,
+        const QString& name,
+        const int& size
+    ) : tbi1(tbi1)
+    , tbi2(tbi2)
+    , name(name)
+    , size(size)
+    {
+        id = -1;
+        fTinyInt = 0;
+        fSmallInt = 0;
+        fMediumInt = 0;
+        fInt = 0;
+        fBigInt = 0;
+        fFloat = 0;
+        fDouble = 0;
+        fDecimal = 0;
+        fDate = QDate();
+        fTime = "00:00:00";
+        fDateTime = QDateTime();
+        fTimestamp = QDateTime();
+        fChar = 'a';
+        fVarChar = "a";
+        fTinyBlob = "a";
+        fTinyText = "a";
+        fBlob = "a";
+        fText = "a";
+        fMediumBlob = "a";
+        fMediumText = "a";
+        fLongBlob = "a";
+        fLongText = "a";
+    }
 
 public:
     class Fields {
@@ -193,7 +250,6 @@ public:
         EntityField<QString> fMediumText = EntityField<QString>("fMediumText", "ts_mysqltest3");
         EntityField<QByteArray> fLongBlob = EntityField<QByteArray>("fLongBlob", "ts_mysqltest3");
         EntityField<QString> fLongText = EntityField<QString>("fLongText", "ts_mysqltest3");
-        EntityField<QVariant> fVariant = EntityField<QVariant>("fVariant", "ts_mysqltest3");
 
     protected:
         void reset(const QString& tbName) {
@@ -224,7 +280,6 @@ public:
             fMediumText = EntityField<QString>("fMediumText", tbName);
             fLongBlob = EntityField<QByteArray>("fLongBlob", tbName);
             fLongText = EntityField<QString>("fLongText", tbName);
-            fVariant = EntityField<QVariant>("fVariant", tbName);
         }
     };
 
@@ -234,7 +289,7 @@ public:
         };
 
         static int fieldSize() {
-            return 28;
+            return 27;
         }
 
         static QString getTableName() {
@@ -277,8 +332,7 @@ public:
                 << "fMediumBlob"
                 << "fMediumText"
                 << "fLongBlob"
-                << "fLongText"
-                << "fVariant";
+                << "fLongText";
         }
 
         static QStringList getFieldsWithoutAutoIncrement() {
@@ -308,8 +362,7 @@ public:
                 << "fMediumBlob"
                 << "fMediumText"
                 << "fLongBlob"
-                << "fLongText"
-                << "fVariant";
+                << "fLongText";
         }
 
         static QStringList getFieldsType() {
@@ -328,20 +381,19 @@ public:
                 << QStringLiteral("fDouble double default 0 comment 'type double'")
                 << QStringLiteral("fDecimal decimal(6,4) default 0 comment 'type decimal(6,4)'")
                 << QStringLiteral("fDate date comment 'type date'")
-                << QStringLiteral("fTime time default '00:00:00' comment 'type time'")
+                << QStringLiteral("fTime time comment 'type time'")
                 << QStringLiteral("fDateTime datetime comment 'type date time'")
                 << QStringLiteral("fTimestamp timestamp comment 'type timestamp'")
                 << QStringLiteral("fChar char default 'a' comment 'type char'")
                 << QStringLiteral("fVarChar varchar(12) default 'a' comment 'type varchar(12)'")
-                << QStringLiteral("fTinyBlob tinyblob default 'a' comment 'type tiny blob'")
-                << QStringLiteral("fTinyText tinytext default 'a' comment 'type tiny text'")
-                << QStringLiteral("fBlob blob default 'a' comment 'type blob'")
-                << QStringLiteral("fText text default 'a' comment 'type text'")
-                << QStringLiteral("fMediumBlob mediumblob default 'a' comment 'type medium blob'")
-                << QStringLiteral("fMediumText mediumtext default 'a' comment 'type medium text'")
-                << QStringLiteral("fLongBlob longblob default 'a' comment 'type long blob'")
-                << QStringLiteral("fLongText longtext default 'a' comment 'type long text'")
-                << QStringLiteral("fVariant blob comment 'type variant'");
+                << QStringLiteral("fTinyBlob tinyblob comment 'type tiny blob'")
+                << QStringLiteral("fTinyText tinytext comment 'type tiny text'")
+                << QStringLiteral("fBlob blob comment 'type blob'")
+                << QStringLiteral("fText text comment 'type text'")
+                << QStringLiteral("fMediumBlob mediumblob comment 'type medium blob'")
+                << QStringLiteral("fMediumText mediumtext comment 'type medium text'")
+                << QStringLiteral("fLongBlob longblob comment 'type long blob'")
+                << QStringLiteral("fLongText longtext comment 'type long text'");
         }
 
         static QStringList getPrimaryKeys() {
@@ -389,8 +441,7 @@ public:
                 << entity.fMediumBlob
                 << entity.fMediumText
                 << entity.fLongBlob
-                << entity.fLongText
-                << entity.fVariant;
+                << entity.fLongText;
         }
 
         static QVariant getValueByName(const MysqlTest3& entity, const QString& target) {
@@ -475,9 +526,6 @@ public:
             if (target == "fLongText") {
                 return entity.fLongText;
             }
-            if (target == "fVariant") {
-                return entity.fVariant;
-            }
             return entity.__extra.value(target);
         }
 
@@ -540,8 +588,6 @@ public:
                 entity.fLongBlob = value.value<QByteArray>();
             } else if (target == "fLongText") {
                 entity.fLongText = value.value<QString>();
-            } else if (target == "fVariant") {
-                entity.fVariant = value.value<QVariant>();
             } else {
                 entity.__putExtra(target, value);
             }
@@ -657,13 +703,10 @@ public:
     inline void setFLongText(const QString& fLongText) {this->fLongText = fLongText;}
     //get type long text
     inline QString getFLongText() const {return fLongText;}
-    //set type variant
-    inline void setFVariant(const QVariant& fVariant) {this->fVariant = fVariant;}
-    //get type variant
-    inline QVariant getFVariant() const {return fVariant;}
     //set temp data
     inline void __putExtra(const QString& key, const QVariant& extra) {this->__extra.insert(key, extra);}
     //get function select result, like get "as" field result
     inline QVariant __getExtra(const QString& key) const {return __extra.value(key);}
 };
 typedef QList<MysqlTest3> MysqlTest3List;
+Q_DECLARE_METATYPE(MysqlTest3);

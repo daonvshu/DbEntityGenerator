@@ -17,8 +17,6 @@ private:
     int number;
     //
     int number2;
-    //自定义类型
-    QVariant varianttype;
 
     ///transient 临时类型
     QString nametmp;
@@ -34,22 +32,23 @@ public:
     MysqlTest2(
         const QString& name,
         const int& number,
-        const int& number2,
-        const QVariant& varianttype
+        const int& number2
     ) : name(name)
     , number(number)
     , number2(number2)
-    , varianttype(varianttype)
-    { }
+    {
+        id = -1;
+    }
 
     MysqlTest2(
         const QString& name,
-        const int& number2,
-        const QVariant& varianttype
+        const int& number2
     ) : name(name)
     , number2(number2)
-    , varianttype(varianttype)
-    { }
+    {
+        id = -1;
+        number = 0;
+    }
 
 public:
     class Fields {
@@ -58,7 +57,6 @@ public:
         EntityField<QString> name = EntityField<QString>("name", "ts_mysqltest2");
         EntityField<int> number = EntityField<int>("number", "ts_mysqltest2");
         EntityField<int> number2 = EntityField<int>("number2", "ts_mysqltest2");
-        EntityField<QVariant> varianttype = EntityField<QVariant>("varianttype", "ts_mysqltest2");
 
     protected:
         void reset(const QString& tbName) {
@@ -66,7 +64,6 @@ public:
             name = EntityField<QString>("name", tbName);
             number = EntityField<int>("number", tbName);
             number2 = EntityField<int>("number2", tbName);
-            varianttype = EntityField<QVariant>("varianttype", tbName);
         }
     };
 
@@ -76,7 +73,7 @@ public:
         };
 
         static int fieldSize() {
-            return 5;
+            return 4;
         }
 
         static QString getTableName() {
@@ -96,25 +93,22 @@ public:
                 << "id"
                 << "name"
                 << "number"
-                << "number2"
-                << "varianttype";
+                << "number2";
         }
 
         static QStringList getFieldsWithoutAutoIncrement() {
             return QStringList()
                 << "name"
                 << "number"
-                << "number2"
-                << "varianttype";
+                << "number2";
         }
 
         static QStringList getFieldsType() {
             return QStringList() 
                 << QStringLiteral("id bigint primary key auto_increment comment '自增长主键'")
-                << QStringLiteral("name text not null comment ''")
+                << QStringLiteral("name varchar(100) not null comment ''")
                 << QStringLiteral("number int default 0 comment ''")
-                << QStringLiteral("number2 int comment ''")
-                << QStringLiteral("varianttype blob comment '自定义类型'");
+                << QStringLiteral("number2 int comment ''");
         }
 
         static QStringList getPrimaryKeys() {
@@ -142,8 +136,7 @@ public:
             return QVariantList()
                 << entity.name
                 << entity.number
-                << entity.number2
-                << entity.varianttype;
+                << entity.number2;
         }
 
         static QVariant getValueByName(const MysqlTest2& entity, const QString& target) {
@@ -158,12 +151,6 @@ public:
             }
             if (target == "number2") {
                 return entity.number2;
-            }
-            if (target == "varianttype") {
-                return entity.varianttype;
-            }
-            if (target == "nametmp") {
-                return entity.nametmp;
             }
             return entity.__extra.value(target);
         }
@@ -181,8 +168,6 @@ public:
                 entity.number = value.value<int>();
             } else if (target == "number2") {
                 entity.number2 = value.value<int>();
-            } else if (target == "varianttype") {
-                entity.varianttype = value.value<QVariant>();
             } else {
                 entity.__putExtra(target, value);
             }
@@ -206,10 +191,6 @@ public:
     inline void setNumber2(const int& number2) {this->number2 = number2;}
     //
     inline int getNumber2() const {return number2;}
-    //set 自定义类型
-    inline void setVarianttype(const QVariant& varianttype) {this->varianttype = varianttype;}
-    //get 自定义类型
-    inline QVariant getVarianttype() const {return varianttype;}
     //set 临时类型
     inline void setNametmp(const QString& nametmp) {this->nametmp = nametmp;}
     //get 临时类型
@@ -220,3 +201,4 @@ public:
     inline QVariant __getExtra(const QString& key) const {return __extra.value(key);}
 };
 typedef QList<MysqlTest2> MysqlTest2List;
+Q_DECLARE_METATYPE(MysqlTest2);
