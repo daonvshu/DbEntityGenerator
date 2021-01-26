@@ -309,8 +309,9 @@ QString AbstractGenerator::createFieldDeclare(const QString& prefix) {
         }
         ENTER;
         TAB_2;
-        ADD(QString("EntityField<%1> %2 = EntityField<%1>(\"%2\", \"%3\");")
+        ADD(QString("EntityField<%1> %2 = EntityField<%1>(\"%3\", \"%4\");")
             .arg(getFieldCppType(field.type))
+            .arg(field.name)
             .arg(getFieldInDatabaseName(field.name))
             .arg(createTableName(prefix))
         );
@@ -327,9 +328,10 @@ QString AbstractGenerator::createFieldDeclareReset() {
         ENTER;
         TAB_1;
         TAB_2;
-        ADD(QString("%1 = EntityField<%2>(\"%1\", tbName);")
-            .arg(getFieldInDatabaseName(field.name))
+        ADD(QString("%1 = EntityField<%2>(\"%3\", tbName);")
+            .arg(field.name)
             .arg(getFieldCppType(field.type))
+            .arg(getFieldInDatabaseName(field.name))
         );
     }
     TP_END;
