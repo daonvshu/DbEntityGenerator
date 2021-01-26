@@ -45,6 +45,10 @@ void MysqlGenerator::generate() {
         header.replace("$BindAutoIncrementId$", createBindAutoIncrementId());
         //set bind value
         header.replace("$BindValues$", createBindValue());
+        //set json to entity
+        header.replace("$JsonToEntity$", createJsonToEntity());
+        //set entity to json
+        header.replace("$EntityToJson$", createEntityToJson());
         //set values getter
         header.replace("$ValuesWithAuto$", createValuesGetWithoutAutoIncrement());
         //set value getter

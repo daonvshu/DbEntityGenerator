@@ -69,6 +69,10 @@ QString AbstractGenerator::upperFirstChar(const QString& s) {
     return (char)(p1char - 32) + p1data.mid(1);
 }
 
+QString AbstractGenerator::getFieldInDatabaseName(const QString& s, bool ignoreMix) {
+    return lowerAndSplitWithUnderline(s);
+}
+
 void AbstractGenerator::writeTableHeaderByDiff(const QString& content, const Table& tb) {
     auto hppCotent = QString(content).toUtf8();
     auto currentHash = QCryptographicHash::hash(hppCotent, QCryptographicHash::Md5);
@@ -307,7 +311,7 @@ QString AbstractGenerator::createFieldDeclare(const QString& prefix) {
         TAB_2;
         ADD(QString("EntityField<%1> %2 = EntityField<%1>(\"%2\", \"%3\");")
             .arg(getFieldCppType(field.type))
-            .arg(field.name)
+            .arg(getFieldInDatabaseName(field.name))
             .arg(createTableName(prefix))
         );
     }
@@ -324,7 +328,7 @@ QString AbstractGenerator::createFieldDeclareReset() {
         TAB_1;
         TAB_2;
         ADD(QString("%1 = EntityField<%2>(\"%1\", tbName);")
-            .arg(field.name)
+            .arg(getFieldInDatabaseName(field.name))
             .arg(getFieldCppType(field.type))
         );
     }
@@ -356,7 +360,7 @@ QString AbstractGenerator::createFields() {
         ENTER;
         TAB_4;
         ADD("<< \"");
-        ADD(field.name);
+        ADD(getFieldInDatabaseName(field.name));
         ADD("\"");
     }
     TP_END;
@@ -374,7 +378,7 @@ QString AbstractGenerator::createFieldsWithoutAutoIncrement() {
         ENTER;
         TAB_4;
         ADD("<< \"");
-        ADD(field.name);
+        ADD(getFieldInDatabaseName(field.name));
         ADD("\"");
     }
     TP_END;
@@ -389,7 +393,7 @@ QString AbstractGenerator::createDatabaseType() {
         ENTER;
         TAB_4;
         ADD("<< QStringLiteral(\"");
-        ADD(field.name);
+        ADD(getFieldInDatabaseName(field.name));
         SPACE;
         ADD(getDatabaseFieldType(field.type));
         if (field.bitsize != 0) {
@@ -443,7 +447,7 @@ QString AbstractGenerator::createPrimaryKeys() {
         }
         if (field.constraint == "primary key") {
             ADD(" << ");
-            ADD_S(field.name);
+            ADD_S(getFieldInDatabaseName(field.name));
         }
     }
     TP_END;
@@ -458,7 +462,7 @@ QString AbstractGenerator::createIndexFields(QString indexType) {
             ADD("<< (QStringList()");
             for (const auto& s : index.fields) {
                 ADD(" << ");
-                ADD_S(s);
+                ADD_S(getFieldInDatabaseName(s));
             }
             ADD(")");
         }
@@ -479,7 +483,7 @@ QString AbstractGenerator::createCheckNameIncrement() {
                 TAB_2;
                 ADD("|| ");
             }
-            ADD(QString("name == \"%1\"").arg(field.name));
+            ADD(QString("name == \"%1\"").arg(getFieldInDatabaseName(field.name)));
         }
     }
     if (str.isEmpty()) {
@@ -529,7 +533,7 @@ QString AbstractGenerator::createGetValueByName() {
             continue;
         }
         ADD("if (target == \"");
-        ADD(field.name);
+        ADD(getFieldInDatabaseName(field.name));
         ADD("\") {");
         ENTER;
         TAB_4;
@@ -582,7 +586,7 @@ QString AbstractGenerator::createBindValue() {
             continue;
         }
         ADD(" else if (target == \"");
-        ADD(field.name);
+        ADD(getFieldInDatabaseName(field.name));
         ADD("\") {");
         ENTER;
         TAB_4;
@@ -607,6 +611,103 @@ QString AbstractGenerator::createBindValue() {
         ADD("}");
     }
     USE_RIGHT(6);
+    TP_END;
+}
+
+QString AbstractGenerator::createJsonToEntity() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("entity.");
+        ADD(field.name);
+        ADD(" = ");
+        auto cppType = getFieldCppType(field.type);
+        if (cppType == "QByteArray") {
+            ADD("QByteArray::fromBase64(object.value(\"");
+        } else if (cppType == "QDate") {
+            ADD("QDate::fromString(object.value(\"");
+        } else if (cppType == "QDateTime") {
+            ADD("QDateTime::fromString(object.value(\"");
+        } else {
+            ADD("object.value(\"");
+        }
+
+        if (field.jsonKey.isEmpty()) {
+            ADD(getFieldInDatabaseName(field.name, true));
+        } else {
+            ADD(field.jsonKey);
+        }
+
+        if (cppType == "QByteArray") {
+            ADD("\").toString().toLatin1());");
+        } else if (cppType == "QDate" || cppType == "QDateTime") {
+            ADD("\").toString(), \"");
+            if (field.jsonTimeFormat.isEmpty()) {
+                if (cppType == "QDate") {
+                    ADD("yyyy-MM-dd");
+                } else {
+                    ADD("yyyy-MM-dd HH:mm:ss");
+                }
+            } else {
+                ADD(field.jsonTimeFormat);
+            }
+            ADD("\");");
+        } else {
+            ADD("\").toVariant().value<");
+            ADD(getFieldCppType(field.type));
+            ADD(">();");
+        }
+    }
+    TP_END;
+}
+
+QString AbstractGenerator::createEntityToJson() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        ENTER;
+        TAB_1;
+        TAB_2;
+        ADD("object.insert(\"");
+        if (field.jsonKey.isEmpty()) {
+            ADD(getFieldInDatabaseName(field.name, true));
+        } else {
+            ADD(field.jsonKey);
+        }
+        ADD("\", ");
+        auto cppType = getFieldCppType(field.type);
+        if (cppType == "QByteArray") {
+            ADD("QString::fromLatin1(entity.");
+            ADD(field.name);
+            ADD(".toBase64())");
+        } else {
+            ADD("entity.");
+            ADD(field.name);
+            if (cppType == "QDate" || cppType == "QDateTime") {
+                ADD(".toString(\"");
+                if (field.jsonTimeFormat.isEmpty()) {
+                    if (cppType == "QDate") {
+                        ADD("yyyy-MM-dd");
+                    } else {
+                        ADD("yyyy-MM-dd HH:mm:ss");
+                    }
+                } else {
+                    ADD(field.jsonTimeFormat);
+                }
+                ADD("\")");
+            } else if (cppType == "QChar") {
+                ADD(".toLatin1()");
+            }
+        }
+        ADD(");");
+    }
     TP_END;
 }
 

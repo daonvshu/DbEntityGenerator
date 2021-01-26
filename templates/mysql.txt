@@ -4,6 +4,7 @@
 #include <qobject.h>
 #include <qvariant.h>
 #include <qdatetime.h>
+#include <qjsonobject.h>
 
 #include "$DbLoaderPath$condition/EntityField.h"
 
@@ -89,6 +90,20 @@ public:
 
         static void bindValue($ClassName$& entity, const QString& target, QVariant value) {
             $BindValues$
+        }
+
+        static $ClassName$ fromJson(const QJsonObject& object) {
+            $ClassName$ entity;$JsonToEntity$
+            return entity;
+        }
+
+        static QJsonObject toJson(const $ClassName$& entity, QStringList excludeKeys = QStringList()) {
+            QJsonObject object;$EntityToJson$
+
+            for (const auto& key : excludeKeys) {
+                object.remove(key);
+            }
+            return object;
         }
     };
 

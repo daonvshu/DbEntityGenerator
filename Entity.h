@@ -11,6 +11,8 @@ struct Field {
 	QString default;
 	bool autoincreament;
 	bool transient;
+	QString jsonKey;
+	QString jsonTimeFormat;
 	//extra
 	int bitsize;
 	int decimal_d;

@@ -21,6 +21,7 @@ protected:
     QString loadTemplateFile(const QString& name);
     QString lowerAndSplitWithUnderline(const QString& s);
     QString upperFirstChar(const QString& s);
+    QString getFieldInDatabaseName(const QString& s, bool ignoreMix = false);
 
     void writeTableHeaderByDiff(const QString& content, const Table& tb);
 
@@ -60,6 +61,8 @@ protected:
     QString createGetValueByName();
     QString createBindAutoIncrementId();
     QString createBindValue();
+    QString createJsonToEntity();
+    QString createEntityToJson();
 
     QString createSetterGetter();
     QString createMetaType();
