@@ -659,6 +659,8 @@ QString AbstractGenerator::createJsonToEntity() {
                 ADD(field.jsonTimeFormat);
             }
             ADD("\");");
+        } else if (cppType == "QVariant") {
+            ADD("\");");
         } else {
             ADD("\").toVariant().value<");
             ADD(getFieldCppType(field.type));
@@ -689,6 +691,10 @@ QString AbstractGenerator::createEntityToJson() {
             ADD("QString::fromLatin1(entity.");
             ADD(field.name);
             ADD(".toBase64())");
+        } else if (cppType == "QVariant") {
+            ADD("QJsonValue::fromVariant(entity.");
+            ADD(field.name);
+            ADD(")");
         } else {
             ADD("entity.");
             ADD(field.name);
