@@ -4,6 +4,7 @@
 #include <qfile.h>
 #include <qregexp.h>
 #include <qtextstream.h>
+#include <qset.h>
 
 AbstractGenerator::AbstractGenerator(QString outputPath, QString loadPath)
     : outputPath(outputPath)
@@ -173,10 +174,11 @@ $ClassName$(
 */
 QString AbstractGenerator::createConstruct() {
     TP_START;
+    QSet<QString> constructList;
     //default construct
     auto fieldInit = createDefaultFieldInit();
     if (!fieldInit.isEmpty()) {
-        ADD(QString("$ClassName$() {\n%1    }").arg(fieldInit));
+        constructList << QString("$ClassName$() {\n%1    }").arg(fieldInit);
     }
 
     bool hasNotDefaultValue = false;
@@ -191,24 +193,28 @@ QString AbstractGenerator::createConstruct() {
     }
 
     if (hasNotAutoIncrementField) {
-        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
-            .arg(createConstructField(), createConstructCommit(), createDefaultFieldInit(true)));
+        constructList << QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+            .arg(createConstructField(), createConstructCommit(), createDefaultFieldInit(true));
     }
 
     if (hasNotDefaultValue) {
-        ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
-            .arg(createConstructField(true), createConstructCommit(true), fieldInit));
+        constructList << QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+            .arg(createConstructField(true), createConstructCommit(true), fieldInit);
     }
 
     for (const auto& customConstructor : tb.customConstructor) {
         if (!customConstructor.isEmpty()) {
-            ADD(QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+            constructList << QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
                 .arg(
                     createConstructField(true, customConstructor),
                     createConstructCommit(true, customConstructor),
                     createDefaultFieldInit(false, customConstructor)
-                ));
+                );
         }
+    }
+
+    for (const auto& construct : constructList) {
+        ADD(construct);
     }
 
     str.replace("$ClassName$", tb.name);
