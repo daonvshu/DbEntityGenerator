@@ -50,6 +50,9 @@
     <ClCompile Include="test\MysqlEntityInclude.cpp">
       <Filter>Header Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="test\SqliteEntityInclude.cpp">
+      <Filter>Header Files\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generator.h">
@@ -67,12 +70,6 @@
     <ClInclude Include="AbstractGenerator.h">
       <Filter>Header Files\generator</Filter>
     </ClInclude>
-    <ClInclude Include="test\test1.h">
-      <Filter>Header Files\test</Filter>
-    </ClInclude>
-    <ClInclude Include="test\test2.h">
-      <Filter>Header Files\test</Filter>
-    </ClInclude>
     <ClInclude Include="MysqlGenerator.h">
       <Filter>Header Files\generator</Filter>
     </ClInclude>
@@ -83,6 +80,12 @@
       <Filter>Header Files\test</Filter>
     </ClInclude>
     <ClInclude Include="test\MysqlTest3.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqliteTest1.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqliteTest2.h">
       <Filter>Header Files\test</Filter>
     </ClInclude>
   </ItemGroup>
@@ -120,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="test\MysqlEntityInclude.h">
+      <Filter>Header Files\test</Filter>
+    </QtMoc>
+    <QtMoc Include="test\SqliteEntityInclude.h">
       <Filter>Header Files\test</Filter>
     </QtMoc>
   </ItemGroup>
