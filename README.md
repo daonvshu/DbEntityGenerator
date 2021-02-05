@@ -27,8 +27,8 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||QByteArray("abc")|QByteArray("abc")|null|
 |variant|QVariant|(any string)|(any string)|null|不做处理的任意字符串|
 #### - mysql
-|字段类型|c++类型|默认值示例|entity默认值|数据库默认值|备注|
-|:--:|:--:|:--|:--|:--|:--|
+|字段类型|c++类型|默认值示例|entity默认值|数据库默认值|
+|:--:|:--:|:--|:--|:--|
 |tinyint|char|0|0|0|
 |||null|char()|null|
 |smallint|short|0|0|0|
@@ -39,20 +39,20 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||null|qint64()|null|
 |float/double/decimal|qreal|0.0|0.0|0.0|
 |||null|qreal()|null|
-|time|QString|120:59:59|"120:59:59"|'120:59:59'|使用时间字符串|
-|||QTime::currentTime()<br>.toString("HH:mm:ss")|QTime::currentTime()<br>.toString("HH:mm:ss")|null|使用类名的类构造/静态函数调用|
-|||now|QTime::currentTime()<br>.toString("HH:mm:ss")|null|当前时间标志|
+|time|QString|120:59:59|"120:59:59"|'120:59:59'|
+|||QTime::currentTime()<br>.toString("HH:mm:ss")|QTime::currentTime()<br>.toString("HH:mm:ss")|null|
+|||now|QTime::currentTime()<br>.toString("HH:mm:ss")|null|
 |||null|QString()|null|
-|date|QDate|2020-01-01|QDate::fromString("2020-01-01")|'2020-01-01'|
-|||QDate::currentDate()|QDate::currentData()|null|使用类名的类构造/静态函数调用|
+|date|QDate|2020-01-01|QDate::fromString<br>("2020-01-01")|'2020-01-01'|
+|||QDate::currentDate()|QDate::currentData()|null|
 |||now|QDate::currentData()|null|
 |||null|QDate()|null|
 |datetime/timestamp|QDateTime|2020-01-01 12:59:58.233|QDateTime::fromString<br>("2020-01-01 12:59:58.233")|'2020-01-01 12:59:58.233'|
-|||QDateTime::currentDataTime()|QDateTime::currentDataTime()|null|使用类名的类构造/静态函数调用|
+|||QDateTime::<br>currentDataTime()|QDateTime::<br>currentDataTime()|null|
 |||null|QDateTime()|null|
-|||now|QDateTime::currentDateTime()|CURRENT_TIMESTAMP|
-|||CURRENT_TIMESTAMP(n)|QDateTime::currentDateTime()|CURRENT_TIMESTAMP(n)|使用数据库本地时间作为默认值|
-|||CURRENT_TIMESTAMP(n) ON<br> UPDATE CURRENT_TIMESTAMP(n)|QDateTime::currentDateTime()|CURRENT_TIMESTAMP(n) ON<br> UPDATE CURRENT_TIMESTAMP(n)|默认值和更新都使用数据库本地时间|
+|||now|QDateTime::<br>currentDateTime()|CURRENT_TIMESTAMP|
+|||CURRENT_TIMESTAMP(n)|QDateTime::<br>currentDateTime()|CURRENT_TIMESTAMP(n)|
+|||CURRENT_TIMESTAMP(n)<br> ON UPDATE <br>CURRENT_TIMESTAMP(n)|QDateTime::<br>currentDateTime()|CURRENT_TIMESTAMP(n)<br> ON UPDATE <br>CURRENT_TIMESTAMP(n)|
 |||null ON UPDATE <br>CURRENT_TIMESTAMP(n)|QDateTime()|null ON UPDATE <br>CURRENT_TIMESTAMP(n)|
 |char|QChar|a|'a'|'a'|
 |||null|QChar()|null|
@@ -61,7 +61,7 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||empty|QString()|''|
 |||"null"|"null"|'null'|
 |||QString("string")|QString("string")|null|
-|tinytext/text/mediumtext/longtext|QString|aaa|"aaa"|null|
+|tinytext/text/<br>mediumtext/longtext|QString|aaa|"aaa"|null|
 |||null|QString()|null|
 |||empty|QString()|null|
 |||"null"|"null"|null|
@@ -72,8 +72,8 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||"null"|"null"|null|
 |||QByteArray("string")|QByteArray("string")|null|
 #### - sqlserver
-|字段类型|c++类型|默认值示例|entity默认值|数据库默认值|备注|
-|:--:|:--:|:--|:--|:--|:--|
+|字段类型|c++类型|默认值示例|entity默认值|数据库默认值|
+|:--:|:--:|:--|:--|:--|
 |tinyint|uchar|0|0|0|
 |||null|uchar()|null|
 |smallint|short|0|0|0|
@@ -85,8 +85,8 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |float/double/decimal/<br>numeric/real|qreal|0.0|0.0|0.0|
 |||null|qreal()|null|
 |time|QTime|12:59:59.6789|QTime::fromString("12:59:59.6789")|'12:59:59.6789'|
-|||QTime::currentTime()|QTime::currentTime()|null|使用类名的类构造/静态函数调用|
-|||now|QTime::currentTime()|getdate()|当前时间标志|
+|||QTime::currentTime()|QTime::currentTime()|null|
+|||now|QTime::currentTime()|getdate()|
 |||null|QTime()|null|
 |date|QDate|2021-01-01|QDate::fromString("2021-01-01")|'2021-01-01'|
 |||QDate::currentDate()|QDate::currentDate()|null|
@@ -97,7 +97,7 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||now|QDateTime::currentDateTime()|getdate()|
 |||null|QDateTime()|null|
 |timestamp|QByteArray|(any string)|QByteArray()|null|
-|char/varchar/varchar(max)/<br>nchar/nvarchar/nvarchar(max)/<br>text/ntext|QString|string|"string"|'string'|
+|char/varchar/<br>varchar(max)/nchar/nvarchar/<br>nvarchar(max)/text/ntext|QString|string|"string"|'string'|
 |||null|QString()|null|
 |||empty|QString()|''|
 |||"null"|"null"|'null'|
