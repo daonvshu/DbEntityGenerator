@@ -40,20 +40,20 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |float/double/decimal|qreal|0.0|0.0|0.0|
 |||null|qreal()|null|
 |time|QString|120:59:59|"120:59:59"|'120:59:59'|使用时间字符串|
-|||QTime::currentTime().toString("HH:mm:ss")|QTime::currentTime().toString("HH:mm:ss")|null|使用类名的类构造/静态函数调用|
-|||now|QTime::currentTime().toString("HH:mm:ss")|null|当前时间标志|
+|||QTime::currentTime()<br>.toString("HH:mm:ss")|QTime::currentTime()<br>.toString("HH:mm:ss")|null|使用类名的类构造/静态函数调用|
+|||now|QTime::currentTime()<br>.toString("HH:mm:ss")|null|当前时间标志|
 |||null|QString()|null|
 |date|QDate|2020-01-01|QDate::fromString("2020-01-01")|'2020-01-01'|
 |||QDate::currentDate()|QDate::currentData()|null|使用类名的类构造/静态函数调用|
 |||now|QDate::currentData()|null|
 |||null|QDate()|null|
-|datetime/timestamp|QDateTime|2020-01-01 12:59:58.233|QDateTime::fromString("2020-01-01 12:59:58.233")|'2020-01-01 12:59:58.233'|
+|datetime/timestamp|QDateTime|2020-01-01 12:59:58.233|QDateTime::fromString<br>("2020-01-01 12:59:58.233")|'2020-01-01 12:59:58.233'|
 |||QDateTime::currentDataTime()|QDateTime::currentDataTime()|null|使用类名的类构造/静态函数调用|
 |||null|QDateTime()|null|
 |||now|QDateTime::currentDateTime()|CURRENT_TIMESTAMP|
 |||CURRENT_TIMESTAMP(n)|QDateTime::currentDateTime()|CURRENT_TIMESTAMP(n)|使用数据库本地时间作为默认值|
-|||CURRENT_TIMESTAMP(n) ON UPDATE CURRENT_TIMESTAMP(n)|QDateTime::currentDateTime()|CURRENT_TIMESTAMP(n) ON UPDATE CURRENT_TIMESTAMP(n)|默认值和更新都使用数据库本地时间|
-|||null ON UPDATE CURRENT_TIMESTAMP(n)|QDateTime()|null ON UPDATE CURRENT_TIMESTAMP(n)|
+|||CURRENT_TIMESTAMP(n) ON<br> UPDATE CURRENT_TIMESTAMP(n)|QDateTime::currentDateTime()|CURRENT_TIMESTAMP(n) ON<br> UPDATE CURRENT_TIMESTAMP(n)|默认值和更新都使用数据库本地时间|
+|||null ON UPDATE <br>CURRENT_TIMESTAMP(n)|QDateTime()|null ON UPDATE <br>CURRENT_TIMESTAMP(n)|
 |char|QChar|a|'a'|'a'|
 |||null|QChar()|null|
 |varchar|QString|aaa|"aaa"|'aaa'|
@@ -66,7 +66,7 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||empty|QString()|null|
 |||"null"|"null"|null|
 |||QString("string")|QString("string")|null|
-|tinyblob/blob/mediumblob/longblob|QByteArray|aaa|"aaa"|null|
+|tinyblob/blob/<br>mediumblob/longblob|QByteArray|aaa|"aaa"|null|
 |||null|QByteArray()|null|
 |||empty|QByteArray()|null|
 |||"null"|"null"|null|
@@ -82,7 +82,7 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||null|int()|null|
 |bigint|qint64|0|0|0|
 |||null|qint64()|null|
-|float/double/decimal/numeric/real|qreal|0.0|0.0|0.0|
+|float/double/decimal/<br>numeric/real|qreal|0.0|0.0|0.0|
 |||null|qreal()|null|
 |time|QTime|12:59:59.6789|QTime::fromString("12:59:59.6789")|'12:59:59.6789'|
 |||QTime::currentTime()|QTime::currentTime()|null|使用类名的类构造/静态函数调用|
@@ -92,7 +92,7 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||QDate::currentDate()|QDate::currentDate()|null|
 |||now|QDate::currentDate()|getdate()|
 |||null|QDate()|null|
-|datetime/datetime2/datetimeoffset|QDateTime|2021-01-01 12:59:59.6789|QDateTime::fromString("2021-01-01 12:59:59.6789")|'2021-01-01 12:59:59.6789'|
+|datetime/datetime2/<br>datetimeoffset|QDateTime|2021-01-01 12:59:59.6789|QDateTime::fromString<br>("2021-01-01 12:59:59.6789")|'2021-01-01 12:59:59.6789'|
 |||QDateTime::currentDateTime()|QDateTime::currentDateTime()|null|
 |||now|QDateTime::currentDateTime()|getdate()|
 |||null|QDateTime()|null|
@@ -104,7 +104,7 @@ DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 |||QString("string")|QString("string")|null|
 |bit|bool|0|0|0|
 |||null|bool()|null|
-|binary/varbinary/varbinary(max)|QByteArray|string|"string"|null|
+|binary/varbinary/<br>varbinary(max)|QByteArray|string|"string"|null|
 |||null|QByteArray()|null|
 |||empty|QByteArray()|null|
 |||"null"|"null"|null|
