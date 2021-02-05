@@ -4,6 +4,7 @@
 
 #include "SqliteGenerator.h"
 #include "MysqlGenerator.h"
+#include "SqlServerGenerator.h"
 
 bool Generator::generatorStart(const QString & xmlPath, const QString& dbloaderPath) {
     
@@ -18,6 +19,9 @@ bool Generator::generatorStart(const QString & xmlPath, const QString& dbloaderP
 		break;
 	case TYPE_MYSQL:
 		MysqlGenerator(loader.getCfgFilePath(), loader.getEntity(), dbloaderPath).generate();
+		break;
+	case TYPE_SQLSERVER:
+		SqlServerGenerator(loader.getCfgFilePath(), loader.getEntity(), dbloaderPath).generate();
 		break;
 	}
 

@@ -85,17 +85,80 @@ QString SqliteGenerator::getFieldCppType(const QString& fieldType) {
 }
 
 QString SqliteGenerator::getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) {
-    if (fieldType == "int" || fieldType == "long" || fieldType == "real") {
+    if (fieldType == "int") {
+        if (defaultValue.toLower() == "null") {
+            return "int()";
+        }
         return defaultValue;
     }
-    return QString("\"%1\"").arg(defaultValue);
+    if (fieldType == "long") {
+        if (defaultValue.toLower() == "null") {
+            return "qint64()";
+        }
+        return defaultValue;
+    }
+    if (fieldType == "real") {
+        if (defaultValue.toLower() == "null") {
+            return "qreal()";
+        }
+        return defaultValue;
+    }
+    if (fieldType == "text") {
+        if (defaultValue.toLower() == "null" || defaultValue.toLower() == "empty") {
+            return "QString()";
+        }
+        if (defaultValue.contains("QString")) {
+            return defaultValue;
+        }
+        if (defaultValue.startsWith('"')) {
+            return defaultValue;
+        }
+        return QString("\"%1\"").arg(defaultValue);
+    }
+    if (fieldType == "blob") {
+        if (defaultValue.toLower() == "null" || defaultValue.toLower() == "empty") {
+            return "QByteArray()";
+        }
+        if (defaultValue.contains("QByteArray")) {
+            return defaultValue;
+        }
+        if (defaultValue.startsWith('"')) {
+            return defaultValue;
+        }
+        return QString("\"%1\"").arg(defaultValue);
+    }
+    if (fieldType == "variant") {
+        return defaultValue;
+    }
+    return "unknown";
 }
 
 QString SqliteGenerator::getDatabaseDefaultValueString(const QString& fieldType, const QString& defaultValue) {
     if (fieldType == "int" || fieldType == "long" || fieldType == "real") {
+        if (defaultValue.toLower() == "null") {
+            return "null";
+        }
         return defaultValue;
     }
-    return QString("'%1'").arg(defaultValue);
+    if (fieldType == "text" || fieldType == "blob") {
+        if (defaultValue.toLower() == "null") {
+            return "null";
+        }
+        if (defaultValue.toLower() == "empty") {
+            return "''";
+        }
+        if (fieldType == "text" && defaultValue.contains("QString")) {
+            return "null";
+        }
+        if (fieldType == "blob" && defaultValue.contains("QByteArray")) {
+            return "null";
+        }
+        if (defaultValue.startsWith('"')) {
+            return QString(defaultValue).replace('"', '\'');
+        }
+        return QString("'%1'").arg(defaultValue);
+    }
+    return "null";
 }
 
 QString SqliteGenerator::getDatabaseFieldType(const QString& fieldType) {

@@ -4,5 +4,6 @@
         <file>templates/entitydelegate_cpp.txt</file>
         <file>templates/entitydelegate_h.txt</file>
         <file>templates/mysql.txt</file>
+        <file>templates/sqlserver.txt</file>
     </qresource>
 </RCC>

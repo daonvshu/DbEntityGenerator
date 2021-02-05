@@ -13,8 +13,7 @@ private:
 $Members$
     QHash<QString, QVariant> __extra;
 
-public:
-    $Construct$
+public:$Construct$
 
 public:
     class Fields {

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 		}
 	}
 #else
-	if (!Generator::generatorStart("test/mysql_entity.xml", "")) {
+	if (!Generator::generatorStart("test/sqlserver_entity.xml", "")) {
 		getchar();
 	}
 #endif // !DEBUG

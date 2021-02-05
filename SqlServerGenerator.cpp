@@ -1,12 +1,12 @@
-﻿#include "MysqlGenerator.h"
+﻿#include "SqlServerGenerator.h"
 
-MysqlGenerator::MysqlGenerator(QString outputPath, Entity entity, QString dbloadPath)
+SqlServerGenerator::SqlServerGenerator(QString outputPath, Entity entity, QString dbloadPath)
     : AbstractGenerator(outputPath, dbloadPath)
     , entity(entity) {
 }
 
-void MysqlGenerator::generate() {
-    QString hppTemplate = loadTemplateFile(":/generator/templates/mysql.txt");
+void SqlServerGenerator::generate() {
+    QString hppTemplate = loadTemplateFile(":/generator/templates/sqlserver.txt");
     QStringList tbnames;
     for (const auto& tb : entity.tables) {
         setCurrentTable(tb);
@@ -27,8 +27,6 @@ void MysqlGenerator::generate() {
         header.replace("$FieldSize$", createFieldSize());
         //set tablename
         header.replace("$TbName$", createTableName(entity.prefix));
-        //set engine
-        header.replace("$TbEngine$", createTableEngine(tb.engine));
         //set fields
         header.replace("$Fields$", createFields());
         header.replace("$FieldsWithoutAuto$", createFieldsWithoutAutoIncrement());
@@ -63,20 +61,21 @@ void MysqlGenerator::generate() {
     generateEntityDelegate(tbnames);
 }
 
-QString MysqlGenerator::getFieldCppType(const QString& fieldType) {
+QString SqlServerGenerator::getFieldCppType(const QString& fieldType) {
     if (fieldType == "tinyint") {
-        return "char";
+        return "uchar";
     }
     if (fieldType == "smallint") {
         return "short";
     }
-    if (fieldType == "mediumint" || fieldType == "int") {
+    if (fieldType == "int") {
         return "int";
     }
     if (fieldType == "bigint") {
         return "qint64";
     }
-    if (fieldType == "float" || fieldType == "double" || fieldType == "decimal") {
+    if (fieldType == "float" || fieldType == "double" || fieldType == "decimal" ||
+        fieldType == "numeric" || fieldType == "real") {
         return "qreal";
     }
 
@@ -84,31 +83,41 @@ QString MysqlGenerator::getFieldCppType(const QString& fieldType) {
         return "QDate";
     }
     if (fieldType == "time") {
-        return "QString"; //see qsql_mysql.cpp#313
+        return "QTime";
     }
-    if (fieldType == "datetime" || fieldType == "timestamp") {
+    if (fieldType == "datetime" || fieldType == "datetime2" || fieldType == "datetimeoffset") {
         return "QDateTime";
     }
-
-    if (fieldType == "char") {
-        return "QChar";
+    if (fieldType == "timestamp") {
+        return "QByteArray";
     }
-    if (fieldType == "varchar" || fieldType == "tinytext" || fieldType == "text" ||
-        fieldType == "mediumtext" || fieldType == "longtext") {
+
+    if (fieldType == "char" || fieldType == "varchar" || fieldType == "varchar(max)" || 
+        fieldType == "nchar" || fieldType == "nvarchar" || fieldType == "nvarchar(max)" ||
+        fieldType == "text" || fieldType == "ntext") {
         return "QString";
     }
-    if (fieldType == "tinyblob" || fieldType == "blob" || fieldType == "mediumblob" ||
-        fieldType == "longblob") {
+    if (fieldType == "bit") {
+        return "bool";
+    }
+    if (fieldType == "binary" || fieldType == "varbinary" || fieldType == "varbinary(max)") {
+        return "QByteArray";
+    }
+
+    if (fieldType == "sql_variant") {
+        return "QVariant";
+    }
+    if (fieldType == "uniqueidentifier" || fieldType == "xml") {
         return "QByteArray";
     }
 
     return QString("unknown");
 }
 
-QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) {
+QString SqlServerGenerator::getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) {
     if (fieldType == "tinyint") {
         if (defaultValue.toLower() == "null") {
-            return "char()";
+            return "uchar()";
         }
         return defaultValue;
     }
@@ -118,7 +127,7 @@ QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const
         }
         return defaultValue;
     }
-    if (fieldType == "int" || fieldType == "mediumint") {
+    if (fieldType == "int") {
         if (defaultValue.toLower() == "null") {
             return "int()";
         }
@@ -130,7 +139,7 @@ QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const
         }
         return defaultValue;
     }
-    if (fieldType == "float" || fieldType == "double" || fieldType == "decimal") {
+    if (fieldType == "float" || fieldType == "double" || fieldType == "decimal" || fieldType == "numeric" || fieldType == "real") {
         if (defaultValue.toLower() == "null") {
             return "qreal()";
         }
@@ -138,15 +147,15 @@ QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const
     }
     if (fieldType == "time") {
         if (defaultValue.toLower() == "now") {
-            return "QTime::currentTime().toString(\"HH:mm:ss\")";
+            return "QTime::currentTime()";
         }
         if (defaultValue.toLower() == "null") {
-            return "QString()";
+            return "QTime()";
         }
         if (defaultValue.contains("QTime")) {
             return defaultValue;
         }
-        return QString("\"%1\"").arg(defaultValue);
+        return QString("QTime::fromString(\"%1\")").arg(defaultValue);
     }
     if (fieldType == "date") {
         if (defaultValue.toLower() == "now") {
@@ -160,7 +169,7 @@ QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const
         }
         return QString("QDate::fromString(\"%1\")").arg(defaultValue);
     }
-    if (fieldType == "datetime" || fieldType == "timestamp") {
+    if (fieldType == "datetime" || fieldType == "datetime2" || fieldType == "datetimeoffset") {
         if (defaultValue.toLower() == "now") {
             return "QDateTime::currentDateTime()";
         }
@@ -170,22 +179,14 @@ QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const
         if (defaultValue.contains("QDateTime")) {
             return defaultValue;
         }
-        if (defaultValue.startsWith("NULL ON UPDATE CURRENT_TIMESTAMP")) {
-            return "QDateTime()";
-        }
-        if (defaultValue.startsWith("CURRENT_TIMESTAMP")) {
-            return "QDateTime::currentDateTime()";
-        }
         return QString("QDateTime::fromString(\"%1\")").arg(defaultValue);
     }
-    if (fieldType == "char") {
-        if (defaultValue.toLower() == "null") {
-            return "QChar()";
-        }
-        return QString("'%1'").arg(defaultValue);
+    if (fieldType == "timestamp") {
+        return "QByteArray()";
     }
-    if (fieldType == "varchar" || fieldType == "tinytext" || fieldType == "text" ||
-        fieldType == "mediumtext" || fieldType == "longtext") {
+    if (fieldType == "char" || fieldType == "varchar" || fieldType == "varchar(max)" ||
+        fieldType == "nchar" || fieldType == "nvarchar" || fieldType == "nvarchar(max)" ||
+        fieldType == "text" || fieldType == "ntext") {
         if (defaultValue.toLower() == "null" || defaultValue.toLower() == "empty") {
             return "QString()";
         }
@@ -197,9 +198,13 @@ QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const
         }
         return QString("\"%1\"").arg(defaultValue);
     }
-
-    if (fieldType == "tinyblob" || fieldType == "blob" || fieldType == "mediumblob" ||
-        fieldType == "longblob") {
+    if (fieldType == "bit") {
+        if (defaultValue.toLower() == "null") {
+            return "bool()";
+        }
+        return defaultValue;
+    }
+    if (fieldType == "binary" || fieldType == "varbinary" || fieldType == "varbinary(max)") {
         if (defaultValue.toLower() == "null" || defaultValue.toLower() == "empty") {
             return "QByteArray()";
         }
@@ -211,51 +216,42 @@ QString MysqlGenerator::getCppDefaultValueString(const QString& fieldType, const
         }
         return QString("\"%1\"").arg(defaultValue);
     }
+    if (fieldType == "sql_variant") {
+        return defaultValue;
+    }
+    if (fieldType == "uniqueidentifier" || fieldType == "xml") {
+        return defaultValue;
+    }
     return "unknown";
 }
 
-QString MysqlGenerator::getDatabaseDefaultValueString(const QString& fieldType, const QString& defaultValue) {
-    if (fieldType == "tinyint" || fieldType == "smallint" || fieldType == "mediumint" || fieldType == "int" ||
-        fieldType == "bigint" || fieldType == "float" || fieldType == "double" || fieldType == "decimal") {
+QString SqlServerGenerator::getDatabaseDefaultValueString(const QString& fieldType, const QString& defaultValue) {
+    if (fieldType == "tinyint" || fieldType == "smallint" || fieldType == "int" ||
+        fieldType == "bigint" || fieldType == "float" || fieldType == "double" || fieldType == "decimal" || fieldType == "numeric" ||
+        fieldType == "bit") {
         if (defaultValue.toLower() == "null") {
             return "null";
         }
         return defaultValue;
     }
-    if (fieldType == "time" || fieldType == "date") {
+    if (fieldType == "date" || fieldType == "time" || fieldType == "datetime" || fieldType == "datetime2" || fieldType == "datetimeoffset") {
         if (defaultValue.toLower() == "null") {
             return "null";
         }
         if (defaultValue.toLower() == "now") {
-            return "null";
+            return "getdate()";
         }
-        if (defaultValue.contains("QTime") || defaultValue.contains("QDate")) {
-            return "null";
-        }
-        return QString("'%1'").arg(defaultValue);
-    }
-    if (fieldType == "datetime" || fieldType == "timestamp") {
-        if (defaultValue.toLower() == "now") {
-            return "CURRENT_TIMESTAMP";
-        }
-        if (defaultValue.toLower() == "null") {
-            return "null";
-        }
-        if (defaultValue.contains("QDateTime")) {
-            return "null";
-        }
-        if (defaultValue.contains("CURRENT_TIMESTAMP")) {
-            return defaultValue;
-        }
-        return QString("'%1'").arg(defaultValue);
-    }
-    if (fieldType == "char") {
-        if (defaultValue.toLower() == "null") {
+        if (defaultValue.contains("QTime") || defaultValue.contains("QDate") || defaultValue.contains("QDateTime")) {
             return "null";
         }
         return QString("'%1'").arg(defaultValue);
     }
-    if (fieldType == "varchar") {
+    if (fieldType == "timestamp") {
+        return "null";
+    }
+    if (fieldType == "char" || fieldType == "varchar" || fieldType == "varchar(max)" ||
+        fieldType == "nchar" || fieldType == "nvarchar" || fieldType == "nvarchar(max)" ||
+        fieldType == "text" || fieldType == "ntext") {
         if (defaultValue.toLower() == "null") {
             return "null";
         }
@@ -270,25 +266,31 @@ QString MysqlGenerator::getDatabaseDefaultValueString(const QString& fieldType, 
         }
         return QString("'%1'").arg(defaultValue);
     }
+    if (fieldType == "binary" || fieldType == "varbinary" || fieldType == "varbinary(max)") {
+        return "null";
+    }
+    if (fieldType == "sql_variant" || fieldType == "uniqueidentifier" || fieldType == "xml") {
+        return "null";
+    }
     return "null";
 }
 
-QString MysqlGenerator::getDatabaseFieldType(const QString& fieldType) {
+QString SqlServerGenerator::getDatabaseFieldType(const QString& fieldType) {
     return fieldType;
 }
 
-QString MysqlGenerator::getComment(const QString& note) {
-    return QString(" comment '%1'").arg(note);
+QString SqlServerGenerator::getComment(const QString& note) {
+    return QString();
 }
 
-QString MysqlGenerator::getAutoIncrementStatement() {
-    return QString("auto_increment");
+QString SqlServerGenerator::getAutoIncrementStatement() {
+    return QString("identity(1,1)"); //from 1 step 1
 }
 
-QString MysqlGenerator::getSqlTypeName() {
-    return "Mysql";
+QString SqlServerGenerator::getSqlTypeName() {
+    return "SqlServer";
 }
 
-QString MysqlGenerator::getSqlClientTypeName() {
-    return "ClientMysql";
+QString SqlServerGenerator::getSqlClientTypeName() {
+    return "ClientSqlServer";
 }

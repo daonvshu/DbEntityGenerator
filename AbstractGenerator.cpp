@@ -174,11 +174,14 @@ $ClassName$(
 */
 QString AbstractGenerator::createConstruct() {
     TP_START;
-    QSet<QString> constructList;
+    QStringList constructList; //hold the append sequence
+    QSet<QString> constructSet;
     //default construct
     auto fieldInit = createDefaultFieldInit();
     if (!fieldInit.isEmpty()) {
-        constructList << QString("$ClassName$() {\n%1    }").arg(fieldInit);
+        auto str = QString("\n\n    $ClassName$() {\n%1    }").arg(fieldInit);
+        constructList << str;
+        constructSet << str;
     }
 
     bool hasNotDefaultValue = false;
@@ -193,23 +196,35 @@ QString AbstractGenerator::createConstruct() {
     }
 
     if (hasNotAutoIncrementField) {
-        constructList << QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+        auto str = QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
             .arg(createConstructField(), createConstructCommit(), createDefaultFieldInit(true));
+        if (!constructSet.contains(str)) {
+            constructSet << str;
+            constructList << str;
+        }
     }
 
     if (hasNotDefaultValue) {
-        constructList << QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+        auto str = QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
             .arg(createConstructField(true), createConstructCommit(true), fieldInit);
+        if (!constructSet.contains(str)) {
+            constructSet << str;
+            constructList << str;
+        }
     }
 
     for (const auto& customConstructor : tb.customConstructor) {
         if (!customConstructor.isEmpty()) {
-            constructList << QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
+            auto str = QString("\n\n    $ClassName$(\n%1\n    ) : %2\n    {\n%3    }")
                 .arg(
                     createConstructField(true, customConstructor),
                     createConstructCommit(true, customConstructor),
                     createDefaultFieldInit(false, customConstructor)
                 );
+            if (!constructSet.contains(str)) {
+                constructSet << str;
+                constructList << str;
+            }
         }
     }
 
@@ -437,11 +452,17 @@ QString AbstractGenerator::createDatabaseType() {
             auto defaultStr = getDatabaseDefaultValueString(field.type, field.default);
             if (!defaultStr.isEmpty()) {
                 SPACE;
+                if (field.constraint != "primary key") {
+                    ADD("null ");
+                }
                 ADD("default ");
                 ADD(defaultStr);
             }
         }
-        ADD(getComment(field.note));
+        auto comment = getComment(field.note);
+        if (!comment.isEmpty()) {
+            ADD(getComment(field.note));
+        }
         ADD("\")");
     }
     TP_END;
@@ -641,6 +662,8 @@ QString AbstractGenerator::createJsonToEntity() {
             ADD("QDate::fromString(object.value(\"");
         } else if (cppType == "QDateTime") {
             ADD("QDateTime::fromString(object.value(\"");
+        } else if (cppType == "QTime") {
+            ADD("QTime::fromString(object.value(\"");
         } else {
             ADD("object.value(\"");
         }
@@ -653,11 +676,13 @@ QString AbstractGenerator::createJsonToEntity() {
 
         if (cppType == "QByteArray") {
             ADD("\").toString().toLatin1());");
-        } else if (cppType == "QDate" || cppType == "QDateTime") {
+        } else if (cppType == "QDate" || cppType == "QTime" || cppType == "QDateTime") {
             ADD("\").toString(), \"");
             if (field.jsonTimeFormat.isEmpty()) {
                 if (cppType == "QDate") {
                     ADD("yyyy-MM-dd");
+                } else if (cppType == "QTime") {
+                    ADD("HH:mm:ss");
                 } else {
                     ADD("yyyy-MM-dd HH:mm:ss");
                 }
@@ -704,11 +729,13 @@ QString AbstractGenerator::createEntityToJson() {
         } else {
             ADD("entity.");
             ADD(field.name);
-            if (cppType == "QDate" || cppType == "QDateTime") {
+            if (cppType == "QDate" || cppType == "QTime" || cppType == "QDateTime") {
                 ADD(".toString(\"");
                 if (field.jsonTimeFormat.isEmpty()) {
                     if (cppType == "QDate") {
                         ADD("yyyy-MM-dd");
+                    } else if (cppType == "QTime") {
+                        ADD("HH:mm:ss");
                     } else {
                         ADD("yyyy-MM-dd HH:mm:ss");
                     }

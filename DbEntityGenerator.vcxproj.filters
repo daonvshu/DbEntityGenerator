@@ -53,6 +53,12 @@
     <ClCompile Include="test\SqliteEntityInclude.cpp">
       <Filter>Header Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="SqlServerGenerator.cpp">
+      <Filter>Source Files\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="test\SqlServerEntityInclude.cpp">
+      <Filter>Header Files\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generator.h">
@@ -88,6 +94,48 @@
     <ClInclude Include="test\SqliteTest2.h">
       <Filter>Header Files\test</Filter>
     </ClInclude>
+    <ClInclude Include="SqlServerGenerator.h">
+      <Filter>Header Files\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqlServerTest1.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqlServerTest2.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqlServerTest3.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqliteTest3.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqliteDefaultTestInt.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqliteDefaultTestStr.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\MysqlDefaultTestInt.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\MysqlDefaultTestStr.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\MysqlDefaultTestTime.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqlServerDefaultTestBytes.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqlServerDefaultTestInt.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqlServerDefaultTestStr.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\SqlServerDefaultTestTime.h">
+      <Filter>Header Files\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="Resource.qrc">
@@ -99,6 +147,9 @@
       <Filter>Resource Files</Filter>
     </Xml>
     <Xml Include="test\mysql_entity.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
+    <Xml Include="test\sqlserver_entity.xml">
       <Filter>Resource Files</Filter>
     </Xml>
   </ItemGroup>
@@ -115,6 +166,9 @@
     <Text Include="templates\mysql.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="templates\sqlserver.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">
@@ -126,6 +180,9 @@
       <Filter>Header Files\test</Filter>
     </QtMoc>
     <QtMoc Include="test\SqliteEntityInclude.h">
+      <Filter>Header Files\test</Filter>
+    </QtMoc>
+    <QtMoc Include="test\SqlServerEntityInclude.h">
       <Filter>Header Files\test</Filter>
     </QtMoc>
   </ItemGroup>
