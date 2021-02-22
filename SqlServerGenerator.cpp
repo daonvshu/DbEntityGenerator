@@ -30,13 +30,17 @@ void SqlServerGenerator::generate() {
         //set fields
         header.replace("$Fields$", createFields());
         header.replace("$FieldsWithoutAuto$", createFieldsWithoutAutoIncrement());
+        header.replace("$FieldsWithoutTimestamp$", createFieldsWithoutTimestamp());
         //set database type
         header.replace("$FieldType$", createDatabaseType());
         //set primary keys
         header.replace("$PrimaryKey$", createPrimaryKeys());
         //set index
-        header.replace("$FieldIndex$", createIndexFields());
-        header.replace("$UniqueFieldIndex$", createIndexFields("unique index"));
+        header.replace("$ClusteredFieldIndex$", createIndexFields("clustered"));
+        header.replace("$UniqueClusteredFieldIndex$", createIndexFields("unique clustered"));
+        header.replace("$NonClusteredFieldIndex$", createIndexFields("nonclustered"));
+        header.replace("$UniqueNonClusteredFieldIndex$", createIndexFields("unique nonclustered"));
+        header.replace("$GetIndexOption$", createIndexOption());
         //set check name autoincrement
         header.replace("$CheckNameIncrement$", createCheckNameIncrement());
         //set bind id

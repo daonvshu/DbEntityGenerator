@@ -49,6 +49,10 @@ public:
             return QStringList()$FieldsWithoutAuto$;
         }
 
+        static QStringList getFieldsWithoutTimestamp() {
+            return QStringList()$FieldsWithoutTimestamp$;
+        }
+
         static QStringList getFieldsType() {
             return QStringList() $FieldType$;
         }
@@ -57,12 +61,24 @@ public:
             return QStringList()$PrimaryKey$;
         }
 
-        static QList<QStringList> getIndexFields() {
-            return QList<QStringList>()$FieldIndex$;
+        static QList<QStringList> getClusteredIndexFields() {
+            return QList<QStringList>()$ClusteredFieldIndex$;
         }
 
-        static QList<QStringList> getUniqueIndexFields() {
-            return QList<QStringList>()$UniqueFieldIndex$;
+        static QList<QStringList> getUniqueClusteredIndexFields() {
+            return QList<QStringList>()$UniqueClusteredFieldIndex$;
+        }
+
+        static QList<QStringList> getNonClusteredIndexFields() {
+            return QList<QStringList>()$NonClusteredFieldIndex$;
+        }
+
+        static QList<QStringList> getUniqueNonClusteredIndexFields() {
+            return QList<QStringList>()$UniqueNonClusteredFieldIndex$;
+        }
+
+        static QString getIndexOption(const QString& name) {
+            $GetIndexOption$return QString();
         }
 
         static bool isAutoIncrement(const QString& name) {

@@ -407,6 +407,24 @@ QString AbstractGenerator::createFieldsWithoutAutoIncrement() {
     TP_END;
 }
 
+QString AbstractGenerator::createFieldsWithoutTimestamp() {
+    TP_START;
+    FIELD_FOREACH(tb.fields) {
+        if (field.transient) {
+            continue;
+        }
+        if (field.type == "timestamp") {
+            continue;
+        }
+        ENTER;
+        TAB_4;
+        ADD("<< \"");
+        ADD(getFieldInDatabaseName(field.name));
+        ADD("\"");
+    }
+    TP_END;
+}
+
 QString AbstractGenerator::createDatabaseType() {
     TP_START;
     FIELD_FOREACH(tb.fields) {
@@ -494,6 +512,34 @@ QString AbstractGenerator::createIndexFields(QString indexType) {
                 ADD_S(getFieldInDatabaseName(s));
             }
             ADD(")");
+        }
+    }
+    TP_END;
+}
+
+QString AbstractGenerator::createIndexOption() {
+    TP_START;
+    INDEX_FOREACH(tb.indexes) {
+        if (!index.indexOptions.isEmpty()) {
+            ADD("if(name == \"");
+            QString indexName = "index";
+            for (const auto& field : index.fields) {
+                indexName.append("_").append(field.split(" ").at(0));
+            }
+            ADD(indexName);
+            ADD("\") {");
+            ENTER;
+            TAB_4;
+            ADD("return \"");
+            ADD(index.indexOptions);
+            ADD("\";");
+            ENTER;
+            TAB_1;
+            TAB_2;
+            ADD("}");
+            ENTER;
+            TAB_1;
+            TAB_2;
         }
     }
     TP_END;

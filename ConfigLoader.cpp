@@ -89,7 +89,30 @@ bool ConfigLoader::load() {
 				tableData.fields << field;
 			} else if (itemNode.nodeName() == "index") {
 				Index index;
-				index.indexType = itemNode.attribute("type", "index");
+				if (configType != TYPE_SQLSERVER) {
+					index.indexType = itemNode.attribute("type", "index");
+				} else {
+					index.indexType = itemNode.attribute("type", "nonclustered");
+					auto optionIgnoreDupKey = itemNode.attribute("ignore_dup_key");
+					if (!optionIgnoreDupKey.isEmpty()) {
+						index.indexOptions.append("IGNORE_DUP_KEY=").append(optionIgnoreDupKey).append(',');
+					}
+					auto allowRowLocks = itemNode.attribute("allow_row_locks");
+					if (!allowRowLocks.isEmpty()) {
+						index.indexOptions.append("ALLOW_ROW_LOCKS=").append(allowRowLocks).append(',');
+					}
+					auto allowPageLocks = itemNode.attribute("allow_page_locks");
+					if (!allowPageLocks.isEmpty()) {
+						index.indexOptions.append("ALLOW_PAGE_LOCKS=").append(allowPageLocks).append(',');
+					}
+					auto dataCompression = itemNode.attribute("data_compression");
+					if (!dataCompression.isEmpty()) {
+						index.indexOptions.append("DATA_COMPRESSION=").append(dataCompression).append(',');
+					}
+					if (!index.indexOptions.isEmpty()) {
+						index.indexOptions.chop(1);
+					}
+				}
 				auto indexFieldNodes = itemNode.childNodes();
 				for (int k = 0; k < indexFieldNodes.size(); k++) {
 					auto ele = indexFieldNodes.at(k).toElement();

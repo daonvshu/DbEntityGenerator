@@ -21,6 +21,7 @@ struct Field {
 struct Index {
 	QString indexType;
 	QStringList fields;
+	QString indexOptions;
 };
 
 struct Table {

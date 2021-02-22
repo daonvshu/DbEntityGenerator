@@ -52,9 +52,11 @@ protected:
     QString createTableEngine(const QString& engine);
     QString createFields();
     QString createFieldsWithoutAutoIncrement();
+    QString createFieldsWithoutTimestamp();
     QString createDatabaseType();
     QString createPrimaryKeys();
     QString createIndexFields(QString indexType = "index");
+    QString createIndexOption();
     QString createCheckNameIncrement();
 
     QString createValuesGetWithoutAutoIncrement();
