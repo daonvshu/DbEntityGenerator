@@ -542,6 +542,12 @@ QString AbstractGenerator::createIndexOption() {
             TAB_2;
         }
     }
+    if (str.isEmpty()) {
+        ADD("Q_UNUSED(name);");
+        ENTER;
+        TAB_1;
+        TAB_2;
+    }
     TP_END;
 }
 
