@@ -175,6 +175,7 @@ QString SqliteGenerator::getDatabaseFieldType(const QString& fieldType) {
 }
 
 QString SqliteGenerator::getComment(const QString& note) {
+    Q_UNUSED(note);
     return QString();
 }
 

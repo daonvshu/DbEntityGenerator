@@ -71,6 +71,7 @@ QString AbstractGenerator::upperFirstChar(const QString& s) {
 }
 
 QString AbstractGenerator::getFieldInDatabaseName(const QString& s, bool ignoreMix) {
+    Q_UNUSED(ignoreMix);
     return lowerAndSplitWithUnderline(s);
 }
 
@@ -187,7 +188,7 @@ QString AbstractGenerator::createConstruct() {
     bool hasNotDefaultValue = false;
     bool hasNotAutoIncrementField = false;
     FIELD_FOREACH(tb.fields) {
-        if (field.default.isEmpty() && !field.autoincreament) {
+        if (field.defaultValue.isEmpty() && !field.autoincreament) {
             hasNotDefaultValue = true;
         }
         if (!field.autoincreament) {
@@ -240,7 +241,7 @@ QString AbstractGenerator::createConstruct() {
 QString AbstractGenerator::createDefaultFieldInit(bool onlyAutoIncrement, const QStringList& excludeFieldsWithDefault) {
     TP_START;
     FIELD_FOREACH(tb.fields) {
-        if (field.default.isEmpty()) {
+        if (field.defaultValue.isEmpty()) {
             continue;
         }
         if (onlyAutoIncrement && !field.autoincreament) {
@@ -254,7 +255,7 @@ QString AbstractGenerator::createDefaultFieldInit(bool onlyAutoIncrement, const 
         TAB_2;
         ADD(field.name);
         EQUAL;
-        ADD(getCppDefaultValueString(field.type, field.default));
+        ADD(getCppDefaultValueString(field.type, field.defaultValue));
         SEMICOLON;
         ENTER;
     }
@@ -274,7 +275,7 @@ QString AbstractGenerator::createConstructField(bool skipDefaultValue, const QSt
             if (field.autoincreament) {
                 continue;
             }
-            if (!field.default.isEmpty() && skipDefaultValue) {
+            if (!field.defaultValue.isEmpty() && skipDefaultValue) {
                 continue;
             }
         } else {
@@ -304,7 +305,7 @@ QString AbstractGenerator::createConstructCommit(bool skipDefaultValue, const QS
             if (field.autoincreament) {
                 continue;
             }
-            if (!field.default.isEmpty() && skipDefaultValue) {
+            if (!field.defaultValue.isEmpty() && skipDefaultValue) {
                 continue;
             }
         } else {
@@ -466,8 +467,8 @@ QString AbstractGenerator::createDatabaseType() {
                 ADD(field.constraint);
             }
         }
-        if (!field.default.isEmpty() && !field.autoincreament) {
-            auto defaultStr = getDatabaseDefaultValueString(field.type, field.default);
+        if (!field.defaultValue.isEmpty() && !field.autoincreament) {
+            auto defaultStr = getDatabaseDefaultValueString(field.type, field.defaultValue);
             if (!defaultStr.isEmpty()) {
                 SPACE;
                 if (field.constraint != "primary key") {
