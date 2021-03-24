@@ -77,7 +77,7 @@ bool ConfigLoader::load() {
 				field.type = itemNode.attribute("type");
 				field.note = itemNode.attribute("note");
 				field.constraint = itemNode.attribute("constraints");
-				field.default = itemNode.attribute("default");
+				field.defaultValue = itemNode.attribute("default");
 				field.jsonKey = itemNode.attribute("jsonkey");
 				field.jsonTimeFormat = itemNode.attribute("jsontimeformat");
 				field.autoincreament = QVariant(itemNode.attribute("autoincrement", "0")).toBool();

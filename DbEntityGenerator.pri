@@ -11,10 +11,14 @@ HEADERS += ./ConfigLoader.h \
     ./Entity.h \
     ./Generator.h \
     ./AbstractGenerator.h \
-    ./SqliteGenerator.h
+    ./MysqlGenerator.h \
+    ./SqliteGenerator.h \
+    ./SqlServerGenerator.h
 SOURCES += ./ConfigLoader.cpp \
     ./Generator.cpp \
     ./main.cpp \
     ./AbstractGenerator.cpp \
-    ./SqliteGenerator.cpp
+    ./MysqlGenerator.cpp \
+    ./SqliteGenerator.cpp \
+    ./SqlServerGenerator.cpp
 RESOURCES += Resource.qrc

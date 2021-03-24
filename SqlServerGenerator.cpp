@@ -284,6 +284,7 @@ QString SqlServerGenerator::getDatabaseFieldType(const QString& fieldType) {
 }
 
 QString SqlServerGenerator::getComment(const QString& note) {
+    Q_UNUSED(note);
     return QString();
 }
 

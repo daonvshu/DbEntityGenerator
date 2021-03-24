@@ -8,7 +8,7 @@ struct Field {
 	QString type; //require
 	QString note;
 	QString constraint;
-	QString default;
+	QString defaultValue;
 	bool autoincreament;
 	bool transient;
 	QString jsonKey;
