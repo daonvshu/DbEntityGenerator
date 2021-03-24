@@ -182,6 +182,10 @@ QString AbstractGenerator::createConstruct() {
         auto str = QString("\n\n    $ClassName$() {\n%1    }").arg(fieldInit);
         constructList << str;
         constructSet << str;
+    } else {
+        auto str = "\n\n    $ClassName$() {\n    }";
+        constructList << str;
+        constructSet << str;
     }
 
     bool hasNotDefaultValue = false;
