@@ -57,7 +57,7 @@ void SqliteGenerator::generate() {
         //set meta type
         header.replace("$DECLARE_META_TYPE$", createMetaType());
 
-        writeTableHeaderByDiff(header, tb);
+        writeContentWithCheckHash(header, getOutputFilePath(tb));
     }
     generateEntityDelegate(tbnames);
 }

@@ -23,7 +23,7 @@ protected:
     QString upperFirstChar(const QString& s);
     QString getFieldInDatabaseName(const QString& s, bool ignoreMix = false);
 
-    void writeTableHeaderByDiff(const QString& content, const Table& tb);
+    void writeContentWithCheckHash(const QString& content, const QString& path);
 
     virtual QString getFieldCppType(const QString& fieldType) = 0;
     virtual QString getCppDefaultValueString(const QString& fieldType, const QString& defaultValue) = 0;

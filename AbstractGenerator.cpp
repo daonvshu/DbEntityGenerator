@@ -75,13 +75,12 @@ QString AbstractGenerator::getFieldInDatabaseName(const QString& s, bool ignoreM
     return lowerAndSplitWithUnderline(s);
 }
 
-void AbstractGenerator::writeTableHeaderByDiff(const QString& content, const Table& tb) {
+void AbstractGenerator::writeContentWithCheckHash(const QString& content, const QString& path) {
     auto hppCotent = QString(content).toUtf8();
     auto currentHash = QCryptographicHash::hash(hppCotent, QCryptographicHash::Md5);
-    QString outputFile = getOutputFilePath(tb);
-    auto oldHash = getFileMd5(outputFile);
+    auto oldHash = getFileMd5(path);
     if (oldHash.compare(currentHash) != 0) {
-        writeUtf8ContentWithBomHeader(outputFile, content);
+        writeUtf8ContentWithBomHeader(path, content);
     }
 }
 
@@ -862,7 +861,7 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
     auto header = loadTemplateFile(":/generator/templates/entitydelegate_h.txt");
     header.replace("$SqlType$", getSqlTypeName());
     QString headerOutputFile = getOutputFilePath(QString("%1EntityInclude.h").arg(getSqlTypeName()));
-    writeUtf8ContentWithBomHeader(headerOutputFile, header);
+    writeContentWithCheckHash(header, headerOutputFile);
 
     auto cpp = loadTemplateFile(":/generator/templates/entitydelegate_cpp.txt");
     cpp.replace("$SqlType$", getSqlTypeName());
@@ -879,7 +878,7 @@ void AbstractGenerator::generateEntityDelegate(QStringList tbNames) {
     cpp.replace("$DbLoaderPath$", dbloadPath);
 
     QString cppOutputFile = getOutputFilePath(QString("%1EntityInclude.cpp").arg(getSqlTypeName()));
-    writeUtf8ContentWithBomHeader(cppOutputFile, cpp);
+    writeContentWithCheckHash(cpp, cppOutputFile);
 }
 
 void AbstractGenerator::writeUtf8ContentWithBomHeader(const QString& path, const QString& content) {
