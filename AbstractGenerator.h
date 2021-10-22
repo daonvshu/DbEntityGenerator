@@ -69,7 +69,9 @@ protected:
     QString createSetterGetter();
     QString createMetaType();
 
-    void generateEntityDelegate(QStringList tbNames);
+    void generateEntityDelegate(const QStringList& tbNames);
+
+    void generateConfigureFile(const QStringList& tbNames);
 
     void writeUtf8ContentWithBomHeader(const QString& path, const QString& content);
 };

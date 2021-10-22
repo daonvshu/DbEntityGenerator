@@ -63,6 +63,7 @@ void SqlServerGenerator::generate() {
         writeContentWithCheckHash(header, getOutputFilePath(tb));
     }
     generateEntityDelegate(tbnames);
+    generateConfigureFile(tbnames);
 }
 
 QString SqlServerGenerator::getFieldCppType(const QString& fieldType) {

@@ -4,6 +4,34 @@
 DbEntityGenerator.exe sqlite_entity.xml ../qtdao/src
 ```
 
+### 使用CMake配置
+在cmake脚本中使用示例   
+1. 克隆dbentitygenerator和qtdao为cmake子项目
+```cmake
+#...
+add_subdirectory(3rdparty/dbentitygenerator)
+add_subdirectory(3rdparty/qtdao)
+```
+2. 使用当前qt配置编译子项目dbentitygenerator生成Release可执行文件
+3. 在主工程中使用生成器脚本
+```cmake
+#...
+set(CMAKE_AUTOMOC ON)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/entity/entity.cmake) #使用add_custom_command执行后才会生成entity.cmake模块
+
+add_executable(${PROJECT_NAME} WIN32 
+    #...
+    ${ENTITY_FILE_LIST}
+)
+
+#...
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E env "PATH=${Qt5_DIR}/../../../bin" ${DB_ENTITY_GENERATOR_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/entity/sqlite_entity.xml
+    VERBATIM
+)
+```
+
 ### 字段类型对应关系与默认值配置规则  
 注意：entity默认值会影响insert操作，数据库默认值会影响创建/升级数据库操作；autoincrement标记不会生成数据库默认值
 #### - sqlite

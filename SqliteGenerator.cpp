@@ -60,6 +60,7 @@ void SqliteGenerator::generate() {
         writeContentWithCheckHash(header, getOutputFilePath(tb));
     }
     generateEntityDelegate(tbnames);
+    generateConfigureFile(tbnames);
 }
 
 QString SqliteGenerator::getFieldCppType(const QString& fieldType) {

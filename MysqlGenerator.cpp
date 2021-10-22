@@ -61,6 +61,7 @@ void MysqlGenerator::generate() {
         writeContentWithCheckHash(header, getOutputFilePath(tb));
     }
     generateEntityDelegate(tbnames);
+    generateConfigureFile(tbnames);
 }
 
 QString MysqlGenerator::getFieldCppType(const QString& fieldType) {
