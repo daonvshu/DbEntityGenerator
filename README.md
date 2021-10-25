@@ -25,6 +25,10 @@ add_executable(${PROJECT_NAME} WIN32
     ${ENTITY_FILE_LIST}
 )
 
+target_link_libraries(${PROJECT_NAME}
+    #...
+    qtdao::lib
+)
 #...
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E env "PATH=${Qt5_DIR}/../../../bin" ${DB_ENTITY_GENERATOR_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/entity/sqlite_entity.xml
