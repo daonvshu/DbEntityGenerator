@@ -342,3 +342,5 @@ healthchecksdb
 # test folder
 test/*.cpp
 test/*.h
+
+out/

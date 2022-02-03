@@ -2,8 +2,7 @@
 
 SqliteGenerator::SqliteGenerator(QString outputPath, Entity entity, QString dbloadPath)
     : AbstractGenerator(outputPath, dbloadPath)
-    , entity(entity)
-{
+    , entity(entity){
 }
 
 void SqliteGenerator::generate() {
